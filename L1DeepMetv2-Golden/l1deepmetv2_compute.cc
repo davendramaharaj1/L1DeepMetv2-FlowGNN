@@ -2,6 +2,7 @@
 
 /** intermediate variables in the forward function of GraphMetNetwork */
 float emb_cont[NUM_NODES][HIDDEN_DIM/2];
+float emb_charge[NUM_NODES][HIDDEN_DIM/4];
 
 
 /** implementation of torch.nn.ELU() 
@@ -14,7 +15,7 @@ float ELU(float x, float alpha)
     return x > 0 ? x : alpha*(exp(x)-1);
 }
 
-void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM])
+void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES][CAT_DIM])
 {
 
     /** emb_cont = self.embed_continuous(x_cont) */
