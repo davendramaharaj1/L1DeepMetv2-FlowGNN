@@ -3,7 +3,7 @@
 /** intermediate variables in the forward function of GraphMetNetwork */
 float emb_cont[NUM_NODES][HIDDEN_DIM/2];
 float emb_chrg[NUM_NODES][HIDDEN_DIM/4];
-
+float emb_pdg[NUM_NODES][HIDDEN_DIM/4];
 
 /** implementation of torch.nn.ELU() 
  * 
@@ -51,5 +51,39 @@ void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES
         }
     }
 
-    /** pdg_remap = torch.abs(x_cat[:, 0]) */
+    /* pdg_remap = torch.abs(x_cat[:, 0]) */
+    int pdg_remap[NUM_NODES];
+    for (int i = 0; i < NUM_NODES; i++)
+    {
+        pdg_remap[i] = abs(x_cat[i][0]);
+    }
+
+    /**
+     *  for i, pdgval in enumerate(self.pdgs):
+            pdg_remap = torch.where(pdg_remap == pdgval, torch.full_like(pdg_remap, i), pdg_remap)
+    */
+    for (int i = 0; i < PDGS_SIZE; i++)
+    {
+        int pdgval = pdgs[i];
+        for (int row = 0; row < NUM_NODES; row++)
+        {
+            if (pdg_remap[row] == pdgval)
+            {
+                pdg_remap[row] = i;
+            }
+        }
+    }
+
+    /* emb_pdg = self.embed_pdgid(pdg_remap) */
+    for (int i = 0; i < NUM_NODES; i++)
+    {
+        /** get the indx */
+        int idx = pdg_remap[i];
+
+        for (int j = 0; j < HIDDEN_DIM/4; j++)
+        {
+            emb_pdg[i][j] = graphmet_embed_pdgid_weight[idx][j];
+        }
+    }
+
 }

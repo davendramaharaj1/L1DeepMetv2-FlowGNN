@@ -14,6 +14,11 @@
 #define CAT_DIM 2
 #define HIDDEN_DIM 32
 
+#define PDGS_SIZE 7
+
+/** self.pdgs */
+int pdgs[PDGS_SIZE] = {1, 2, 11, 13, 22, 130, 211};
+
 /** Learnable parameters for each layer in L1DeepMetv2 
  * 
  * These are mostly defined in the constructor for class GraphMetNetwork
