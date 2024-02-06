@@ -5,6 +5,7 @@ float emb_cont[NUM_NODES][HIDDEN_DIM/2];
 float emb_chrg[NUM_NODES][HIDDEN_DIM/4];
 float emb_pdg[NUM_NODES][HIDDEN_DIM/4];
 float emb_cat[NUM_NODES][HIDDEN_DIM/2];
+float encode_all[NUM_NODES][HIDDEN_DIM];
 
 /** implementation of torch.nn.ELU() 
  * 
@@ -114,4 +115,31 @@ void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES
         }
     }
 
+    /** self.encode_all(torch.cat([emb_cat, emb_cont], dim=1)) 
+     * Shape: (NUM_NODES, HIDDEN_DIM) * (HIDDEN_DIM, HIDDEN_DIM) = (NUM_NODES, HIDDEN_DIM)
+    */
+    memset(encode_all, 0, NUM_NODES*HIDDEN_DIM*sizeof(float));
+    for (int i = 0; i < NUM_NODES; i++)
+    {
+        for (int j = 0; j < HIDDEN_DIM; j++)
+        {
+            for (int k = 0; k < HIDDEN_DIM; k++)
+            {
+                if (k < HIDDEN_DIM/2)
+                {
+                    encode_all[i][j] += emb_cat[i][k] * graphmet_encode_all_weight[j][k];
+                }
+                else
+                {
+                    encode_all[i][j] += emb_cont[i][k-HIDDEN_DIM/2] * graphmet_encode_all_weight[j][k];
+                }
+            }
+
+            /** add the bias */
+            encode_all[i][j] += graphmet_encode_all_bias[j];
+
+            /** apply torch.nn.ELU() to each element */
+            encode_all[i][j] = ELU(encode_all[i][j], 1.0);
+        }
+    }
 }
