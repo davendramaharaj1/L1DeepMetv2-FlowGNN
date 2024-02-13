@@ -16,6 +16,8 @@
 
 #define PDGS_SIZE 7
 
+#define epsilon 0.00001
+
 /** self.pdgs */
 int pdgs[PDGS_SIZE] = {1, 2, 11, 13, 22, 130, 211};
 

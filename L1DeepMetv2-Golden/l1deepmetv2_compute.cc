@@ -6,6 +6,7 @@ float emb_chrg[NUM_NODES][HIDDEN_DIM/4];
 float emb_pdg[NUM_NODES][HIDDEN_DIM/4];
 float emb_cat[NUM_NODES][HIDDEN_DIM/2];
 float encode_all[NUM_NODES][HIDDEN_DIM];
+float emb[NUM_NODES][HIDDEN_DIM];
 
 /** implementation of torch.nn.ELU() 
  * 
@@ -140,6 +141,17 @@ void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES
 
             /** apply torch.nn.ELU() to each element */
             encode_all[i][j] = ELU(encode_all[i][j], 1.0);
+        }
+    }
+
+    /* emb = self.bn_all(self.encode_all(torch.cat([emb_cat, emb_cont], dim=1))) */
+    memset(emb, 0, NUM_NODES*HIDDEN_DIM*sizeof(float));
+    for (int row = 0; row < NUM_NODES; row++)
+    {
+        for (int col = 0; col < HIDDEN_DIM; col++)
+        {
+            emb[row][col] = ((encode_all[row][col] - graphmet_bn_all_running_mean[col]) / (graphmet_bn_all_running_var[col] + epsilon))*graphmet_bn_all_weight[col]
+                                + graphmet_bn_all_bias[col];
         }
     }
 }
