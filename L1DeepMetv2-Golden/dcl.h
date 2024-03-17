@@ -15,11 +15,16 @@
 #define HIDDEN_DIM 32
 
 #define PDGS_SIZE 7
+#define MAX_EDGES 225
 
 #define epsilon 0.00001
+#define deltaR  0.4
 
 /** self.pdgs */
 int pdgs[PDGS_SIZE] = {1, 2, 11, 13, 22, 130, 211};
+
+/** normalization */
+float norm[CONT_DIM] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
 
 /** Learnable parameters for each layer in L1DeepMetv2 
  * 
