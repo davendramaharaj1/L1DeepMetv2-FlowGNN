@@ -8,7 +8,7 @@
 #include <string.h>
 
 /** Model Hyperparameters */
-#define NUM_NODES 6     /** Also known as the mini batch size */
+#define NUM_NODES 128
 #define NUM_FEAT 8
 #define CONT_DIM 6
 #define CAT_DIM 2
