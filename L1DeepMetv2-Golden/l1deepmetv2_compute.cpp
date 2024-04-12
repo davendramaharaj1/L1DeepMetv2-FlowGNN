@@ -1,3 +1,6 @@
+#include <cstring>
+#include <cstdio>
+#include <cmath>
 #include "helper.h"
 
 /** intermediate variables in the forward function of GraphMetNetwork */

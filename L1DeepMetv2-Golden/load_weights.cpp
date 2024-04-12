@@ -1,5 +1,5 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <iostream>
 #include "dcl.h"
 
 /** self.pdgs */
@@ -169,59 +169,18 @@ void load_weights()
     fread(graphmet_output_2_bias, sizeof(float), 1, f);
     fclose(f);
 
-    // for( int i = 0; i < 16; i++ )
-    // {
-    //     for ( int j = 0; j < 32; j++ )
-    //     {
-    //         printf("%f\t", graphmet_output_0_weight[i][j]);
-    //     }
-    //     printf("\n");
-    // }
+    printf("Error checking random weights\n");
+
+    printf("graphmet_conv_continuous_0_0_nn_0_weight:\n");
+
+    for(int i = 0; i < 32; i ++)
+    {
+        for (int j = 0; j < 64; j++)
+        {
+            std::cout<<graphmet_conv_continuous_0_0_nn_0_weight[i][j]<<" ";
+        }
+
+        std::cout<<"\n";
+    }
+
 }
-
-// int main(void)
-// {
-//     float graphmet_embed_pdgid_weight[7][8];
-
-//     FILE* f;
-
-//     f = fopen("graphnet.embed_pdgid.weight.bin", "r");
-
-//     fread(graphmet_embed_pdgid_weight, sizeof(float), 56, f);
-
-//     for( int i = 0; i < 7; i++ )
-//     {
-//         for ( int j = 0; j < 8; j++ )
-//         {
-//             printf("%f\t", graphmet_embed_pdgid_weight[i][j]);
-//         }
-//         printf("\n");
-//     }
-
-//     printf("\n");
-
-//     fclose(f);
-
-//     // int array[6][3];
-//     // int elt = 0;
-
-//     // for (int i = 0; i < 5; i++){
-//     //     for (int j = 0; j < 3; j++){
-//     //         array[i][j] = elt;
-//     //         elt++;
-//     //     }
-//     // }
-
-//     // for (int i = 0; i < 5; i++){
-//     //     for (int j = 0; j < 3; j++){
-//     //         printf("%d\t", array[i][j]);
-//     //     }
-//     //     printf("\n");
-//     // }
-
-//     // printf("\n");
-
-//     // printf("%p", array[0]);
-
-//     // return 0;
-// }

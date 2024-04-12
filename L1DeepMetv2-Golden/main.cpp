@@ -2,7 +2,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <iostream>
-#include "dcl.h"
+#include "helper.h"
 
 namespace py = pybind11;
 
@@ -33,11 +33,11 @@ PYBIND11_MODULE(appmodule, m) {
     m.def("run_network", &run_graph_network, "Run the graph network");
 }
 
-int main() {
-    // In the C++ domain, this would now be a waiting function or just end.
-    std::cout << "Module loaded and ready for Python calls.\n";
-    return 0; // Keep this if the main function needs to do nothing else.
-}
+// int main() {
+//     // In the C++ domain, this would now be a waiting function or just end.
+//     std::cout << "Module loaded and ready for Python calls.\n";
+//     return 0; // Keep this if the main function needs to do nothing else.
+// }
 
 // int main()
 // {

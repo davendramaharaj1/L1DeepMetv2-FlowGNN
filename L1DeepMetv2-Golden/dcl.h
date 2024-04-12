@@ -59,10 +59,5 @@ extern float graphmet_output_2_weight[1][16];
 extern float graphmet_output_2_bias[1];
 
 
-/* Function Prototypes for GNN inference */
-void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES][CAT_DIM], int batch[NUM_NODES]);
-void load_weights();
-
-
 
 #endif
