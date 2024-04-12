@@ -7,7 +7,7 @@ float emb_pdg[NUM_NODES][HIDDEN_DIM/4];
 float emb_cat[NUM_NODES][HIDDEN_DIM/2];
 float encode_all[NUM_NODES][HIDDEN_DIM];
 float emb[NUM_NODES][HIDDEN_DIM];
-float output[NUM_NODES][OUTPUT_DIM];
+float output[NUM_NODES];
 
 // int edge_src[MAX_EDGES];
 // int edge_dst[MAX_EDGES];
@@ -252,4 +252,14 @@ void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES
     // Call the output layer
     forward_output_layer(emb, graphmet_output_0_weight, graphmet_output_0_bias, graphmet_output_2_weight, graphmet_output_2_bias, output);
 
+    // Apply ReLU to the final output
+    apply_relu(output, NUM_NODES);
+
+    // Now, output contains the final results after the ReLU activation
+    // print the outputs to verify
+    for (int i = 0; i < NUM_NODES; i++) {
+        printf("Output %d: %f\n", i, output[i]);
+    }
+
+    return;
 }

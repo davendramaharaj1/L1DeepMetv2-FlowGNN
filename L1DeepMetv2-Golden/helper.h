@@ -132,14 +132,24 @@ void apply_elu(float arr[HIDDEN_DIM/2], float alpha) {
     }
 }
 
+// relu activation
+void apply_relu(float arr[], int length) {
+    for (int i = 0; i < length; ++i) {
+        arr[i] = fmax(0, arr[i]); // ReLU is max(0, x)
+    }
+}
+
 // Output layer forward pass function
 void forward_output_layer(float emb[NUM_NODES][HIDDEN_DIM], 
                           float weight1[HIDDEN_DIM/2][HIDDEN_DIM], float bias1[HIDDEN_DIM/2],
                           float weight2[OUTPUT_DIM][HIDDEN_DIM/2], float bias2[OUTPUT_DIM],
-                          float output[NUM_NODES][OUTPUT_DIM]) {
-                            
+                          float output[NUM_NODES]) {
+
     // Temporary array to store the intermediate features after first linear layer
     float hidden[NUM_NODES][HIDDEN_DIM/2];
+
+    // Temporary array for output
+    float temp_out[NUM_NODES][OUTPUT_DIM];
 
     // Apply the first linear layer
     for (int i = 0; i < NUM_NODES; ++i) {
@@ -153,10 +163,16 @@ void forward_output_layer(float emb[NUM_NODES][HIDDEN_DIM],
 
     // Apply the second linear layer to get the final output
     for (int i = 0; i < NUM_NODES; ++i) {
-        output[i][0] = bias2[0]; // Initialize with bias for the output layer
+        temp_out[i][0] = bias2[0]; // Initialize with bias for the output layer
         for (int k = 0; k < HIDDEN_DIM/2; ++k) {
-            output[i][0] += weight2[0][k] * hidden[i][k];
+            temp_out[i][0] += weight2[0][k] * hidden[i][k];
         }
+    }
+
+    // squeeze the '1' dimension from temp_out
+    for (int i = 0; i < NUM_NODES; i++)
+    {
+        output[i] = temp_out[i][0];
     }
 }
 
