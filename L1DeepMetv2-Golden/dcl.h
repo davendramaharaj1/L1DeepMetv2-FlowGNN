@@ -8,14 +8,16 @@
 #include <string.h>
 
 /** Model Hyperparameters */
-#define NUM_NODES 128
-#define NUM_FEAT 8
-#define CONT_DIM 6
-#define CAT_DIM 2
-#define HIDDEN_DIM 32
+#define NUM_NODES 128   // this is a fixed value; receive an array of 128 particles every 54 cycles ~ 150ns
+#define NUM_FEAT 8      // each particle has 8 features 
+#define CONT_DIM 6      // 6 real number features
+#define CAT_DIM 2       // 2 categorical features
+#define HIDDEN_DIM 32   // size of hidden layers
+#define OUTPUT_DIM 1
 
 #define PDGS_SIZE 7
-#define MAX_EDGES 225
+#define MAX_EDGES 250
+#define CONV_DEPTH 2
 
 #define epsilon 0.00001
 #define deltaR  0.4

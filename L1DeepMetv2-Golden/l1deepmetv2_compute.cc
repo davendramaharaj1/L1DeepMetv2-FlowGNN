@@ -7,10 +7,14 @@ float emb_pdg[NUM_NODES][HIDDEN_DIM/4];
 float emb_cat[NUM_NODES][HIDDEN_DIM/2];
 float encode_all[NUM_NODES][HIDDEN_DIM];
 float emb[NUM_NODES][HIDDEN_DIM];
+float output[NUM_NODES][OUTPUT_DIM];
 
-int edge_src[MAX_EDGES];
-int edge_dst[MAX_EDGES];
-float flattened_etaphi[NUM_NODES * 2];
+// int edge_src[MAX_EDGES];
+// int edge_dst[MAX_EDGES];
+// float flattened_etaphi[NUM_NODES * 2];
+
+float etaphi[NUM_NODES][2];
+int edge_index[MAX_EDGES][2];
 
 int num_edges;
 
@@ -18,18 +22,25 @@ void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES
 {
 
     /** create a flattened etaphi array by concatenating 4th and 5th columns of x_cont */
-    int index = 0;
+    // int index = 0;
+    // for (int i = 0; i < NUM_NODES; i++) {
+    //     flattened_etaphi[index] = x_cont[i][3]; // 4th column, index 3
+    //     index++;
+    //     flattened_etaphi[index] = x_cont[i][4]; // 5th column, index 4
+    //     index++;
+    // }
+
     for (int i = 0; i < NUM_NODES; i++) {
-        flattened_etaphi[index] = x_cont[i][3]; // 4th column, index 3
-        index++;
-        flattened_etaphi[index] = x_cont[i][4]; // 5th column, index 4
-        index++;
+        etaphi[i][0] = x_cont[i][3];  // 4th column (index 3) of data
+        etaphi[i][1] = x_cont[i][4];  // 5th column (index 4) of data
     }
 
     /** Generate a edges to create a graph */
-    radius_graph(flattened_etaphi, batch, deltaR, edge_src, edge_dst, &num_edges);
+    // radius_graph(flattened_etaphi, batch, deltaR, edge_src, edge_dst, &num_edges);
+    radius_graph(etaphi, NUM_NODES, batch, deltaR, edge_index, &num_edges);
 
 
+    // x_cont *= self.datanorm
     for (int i = 0; i < NUM_NODES; i++) {
         for (int j = 0; j < CONT_DIM; j++) {
             x_cont[i][j] *= norm[j];
@@ -193,4 +204,52 @@ void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES
                                 + graphmet_bn_all_bias[col];
         }
     }
+
+    /**
+     * 
+     * At this point, the embeddings for every node has been calculated and stored in 
+     * 
+     * emb[NUM_NODES][HIDDEN_DIM] ---> 128 nodes with 32 hidden features
+    */
+
+    // perform the edge convolutions for CONV_DEPTH times
+    // emb = emb + co_conv[1](co_conv[0](emb, edge_index))
+    for (int i = 0; i < CONV_DEPTH; i++)
+    {
+        if (i == 0)
+        {
+            edge_convolution(
+                num_edges,
+                emb,
+                edge_index,
+                graphmet_conv_continuous_0_0_nn_0_weight,
+                graphmet_conv_continuous_0_0_nn_0_bias,
+                graphmet_conv_continuous_0_1_weight,
+                graphmet_conv_continuous_0_1_bias,
+                graphmet_conv_continuous_0_1_running_mean,
+                graphmet_conv_continuous_0_1_running_var
+                );
+        }
+        else
+        {
+            edge_convolution(
+                num_edges,
+                emb,
+                edge_index,
+                graphmet_conv_continuous_1_0_nn_0_weight,
+                graphmet_conv_continuous_1_0_nn_0_bias,
+                graphmet_conv_continuous_1_1_weight,
+                graphmet_conv_continuous_1_1_bias,
+                graphmet_conv_continuous_1_1_running_mean,
+                graphmet_conv_continuous_1_1_running_var
+                );
+        }
+    }
+
+    // out = self.output(emb)
+    memset(output, 0, NUM_NODES*OUTPUT_DIM*sizeof(float));
+
+    // Call the output layer
+    forward_output_layer(emb, graphmet_output_0_weight, graphmet_output_0_bias, graphmet_output_2_weight, graphmet_output_2_bias, output);
+
 }
