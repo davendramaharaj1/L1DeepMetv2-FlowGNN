@@ -1,12 +1,6 @@
 #ifndef __DCL_H__
 #define __DCL_H__
 
-#include <stdio.h>
-#include <math.h>
-#include <limits.h>
-#include <stdlib.h>
-#include <string.h>
-
 /** Model Hyperparameters */
 #define NUM_NODES 128   // this is a fixed value; receive an array of 128 particles every 54 cycles ~ 150ns
 #define NUM_FEAT 8      // each particle has 8 features 
@@ -23,10 +17,10 @@
 #define deltaR  0.4
 
 /** self.pdgs */
-int pdgs[PDGS_SIZE] = {1, 2, 11, 13, 22, 130, 211};
+extern int pdgs[PDGS_SIZE];
 
 /** normalization */
-float norm[CONT_DIM] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+extern float norm[CONT_DIM];
 
 /** Learnable parameters for each layer in L1DeepMetv2 
  * 
@@ -66,8 +60,8 @@ extern float graphmet_output_2_bias[1];
 
 
 /* Function Prototypes for GNN inference */
-void L1DeepMetv2_forward();
-void load_weight();
+void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES][CAT_DIM], int batch[NUM_NODES]);
+void load_weights();
 
 
 

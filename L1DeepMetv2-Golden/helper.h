@@ -1,3 +1,6 @@
+#include <cstdio>
+#include <cmath>
+#include <cstring>
 #include "dcl.h"
 
 /** implementation of torch.nn.ELU() 
@@ -93,7 +96,7 @@ void batch_normalization(float node_features[NUM_NODES][HIDDEN_DIM],
     for (int i = 0; i < NUM_NODES; ++i) {
         for (int j = 0; j < HIDDEN_DIM; ++j) {
             // Subtract mean and divide by the square root of variance
-            float normalized = (node_features[i][j] - mean[j]) / sqrtf(variance[j] + 1e-5);
+            float normalized = (node_features[i][j] - mean[j]) / sqrt(variance[j] + 1e-5);
 
             // Scale and shift
             node_features[i][j] = normalized * batch_weight[j] + batch_bias[j];
