@@ -37,7 +37,8 @@ void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES
 
     /** Generate a edges to create a graph */
     // radius_graph(flattened_etaphi, batch, deltaR, edge_src, edge_dst, &num_edges);
-    radius_graph(etaphi, NUM_NODES, batch, deltaR, edge_index, &num_edges);
+    // radius_graph(etaphi, NUM_NODES, batch, deltaR, edge_index, &num_edges);
+    radius_graph(etaphi, NUM_NODES, deltaR, batch, edge_index, &num_edges, 0, MAX_EDGES);
 
 
     // x_cont *= self.datanorm

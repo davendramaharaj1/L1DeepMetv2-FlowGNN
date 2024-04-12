@@ -17,24 +17,60 @@ float squared_distance(float x1, float y1, float x2, float y2)
     return dist;
 }
 
-void radius_graph(float etaphi[][2], int numNodes, int batch[], float delta, int edge_index[][2], int *edge_index_size) {
-    int edge_count = 0;
+// void radius_graph(float etaphi[][2], int numNodes, int batch[], float delta, int edge_index[][2], int *edge_index_size) {
+//     int edge_count = 0;
 
-    for (int i = 0; i < numNodes; i++) {
-        for (int j = i + 1; j < numNodes; j++) {
-            float dx = etaphi[i][0] - etaphi[j][0];
-            float dy = etaphi[i][1] - etaphi[j][1];
-            float distance = sqrt(dx * dx + dy * dy);
+//     for (int i = 0; i < numNodes; i++) {
+//         for (int j = i + 1; j < numNodes; j++) {
+//             float dx = etaphi[i][0] - etaphi[j][0];
+//             float dy = etaphi[i][1] - etaphi[j][1];
+//             float distance = sqrt(dx * dx + dy * dy);
 
-            if (distance <= delta && i != j) {
-                edge_index[edge_count][0] = i;
-                edge_index[edge_count][1] = j;
-                edge_count++;
+//             if (distance <= delta && i != j) {
+//                 edge_index[edge_count][0] = i;
+//                 edge_index[edge_count][1] = j;
+//                 edge_count++;
+//             }
+//         }
+//     }
+
+//     *edge_index_size = edge_count;
+// }
+
+// Naive radius graph function
+void radius_graph(float etaphi[][2], int num_nodes, float r, int batch[], int edge_index[][2], int *edge_cnt, int include_loop, int max_edges) {
+
+    int num_edges = 0;
+
+    float r_squared = r * r;
+
+    for (int i = 0; i < num_nodes; i++) {
+        for (int j = 0; j < num_nodes; j++) {
+            if (!include_loop && i == j) {
+                continue;
+            }
+            if (batch[i] != batch[j]) {
+                continue;
+            }
+
+            float dist_sq = squared_distance(etaphi[i][0], etaphi[i][1], etaphi[j][0], etaphi[j][1]);
+
+            if (dist_sq <= r_squared) {
+
+                if (num_edges < max_edges) {
+                    edge_index[num_edges][0] = i;
+                    edge_index[num_edges][1] = j;
+                    num_edges++;
+                } else {
+                    // Edge list is full
+                    printf("Maximum number of edges reached.\n");
+                    break;
+                }
             }
         }
     }
 
-    *edge_index_size = edge_count;
+    *edge_cnt = num_edges;
 }
 
 // Utility function to perform matrix multiplication followed by bias addition per individual data vector

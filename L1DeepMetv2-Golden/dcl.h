@@ -16,7 +16,7 @@
 #define OUTPUT_DIM 1
 
 #define PDGS_SIZE 7
-#define MAX_EDGES 250
+#define MAX_EDGES 255
 #define CONV_DEPTH 2
 
 #define epsilon 0.00001
