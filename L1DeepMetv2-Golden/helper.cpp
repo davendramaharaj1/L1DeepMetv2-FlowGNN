@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cmath>
 #include <cstring>
+#include <cfloat>
 #include "dcl.h"
 
 /** implementation of torch.nn.ELU() 
@@ -50,9 +51,6 @@ void radius_graph(float etaphi[][2], int num_nodes, float r, int batch[], int ed
     for (int i = 0; i < num_nodes; i++) {
         for (int j = 0; j < num_nodes; j++) {
             if (!include_loop && i == j) {
-                continue;
-            }
-            if (batch[i] != batch[j]) {
                 continue;
             }
 
@@ -106,7 +104,8 @@ void batch_normalization(float node_features[NUM_NODES][HIDDEN_DIM],
 
 // The edge convolution function with batch normalization and residual connection
 void edge_convolution(int num_edges,
-                      float emb[NUM_NODES][HIDDEN_DIM], 
+                      float emb[NUM_NODES][HIDDEN_DIM], // input embedding
+                      float emb_out[NUM_NODES][HIDDEN_DIM], // output embedding
                       int edge_index[][2], 
                       float weight[HIDDEN_DIM][HIDDEN_DIM * 2], 
                       float bias[HIDDEN_DIM],
@@ -116,7 +115,13 @@ void edge_convolution(int num_edges,
                       float variance[HIDDEN_DIM]) {
 
     // Temporary array to store the results of edge convolution operation
-    float edge_conv_results[NUM_NODES][HIDDEN_DIM] = {0};
+    float edge_conv_results[NUM_NODES][HIDDEN_DIM];
+    for (int i = 0; i < NUM_NODES; ++i) {
+        for (int j = 0; j < HIDDEN_DIM; ++j) {
+            edge_conv_results[i][j] = -FLT_MAX;
+        }
+    }
+
 
     // Temporary vector to store concatenated features and their difference
     float concatenated_features[HIDDEN_DIM * 2];
@@ -148,7 +153,7 @@ void edge_convolution(int num_edges,
     // Perform the residual connection
     for (int i = 0; i < NUM_NODES; ++i) {
         for (int j = 0; j < HIDDEN_DIM; ++j) {
-            emb[i][j] += edge_conv_results[i][j];
+            emb_out[i][j] = emb[i][j] + edge_conv_results[i][j];
         }
     }
 }

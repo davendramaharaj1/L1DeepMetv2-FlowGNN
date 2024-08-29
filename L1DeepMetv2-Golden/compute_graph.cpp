@@ -10,6 +10,8 @@ float emb_pdg[NUM_NODES][HIDDEN_DIM/4];
 float emb_cat[NUM_NODES][HIDDEN_DIM/2];
 float encode_all[NUM_NODES][HIDDEN_DIM];
 float emb[NUM_NODES][HIDDEN_DIM];
+float emb1[NUM_NODES][HIDDEN_DIM];
+float emb2[NUM_NODES][HIDDEN_DIM];
 float output[NUM_NODES];
 
 // int edge_src[MAX_EDGES];
@@ -225,6 +227,7 @@ void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES
             edge_convolution(
                 num_edges,
                 emb,
+                emb1,
                 edge_index,
                 graphmet_conv_continuous_0_0_nn_0_weight,
                 graphmet_conv_continuous_0_0_nn_0_bias,
@@ -238,7 +241,8 @@ void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES
         {
             edge_convolution(
                 num_edges,
-                emb,
+                emb1,
+                emb2,
                 edge_index,
                 graphmet_conv_continuous_1_0_nn_0_weight,
                 graphmet_conv_continuous_1_0_nn_0_bias,
@@ -254,16 +258,16 @@ void GraphMetNetworkLayer(float x_cont[NUM_NODES][CONT_DIM], int x_cat[NUM_NODES
     memset(output, 0, NUM_NODES*OUTPUT_DIM*sizeof(float));
 
     // Call the output layer
-    forward_output_layer(emb, graphmet_output_0_weight, graphmet_output_0_bias, graphmet_output_2_weight, graphmet_output_2_bias, output);
+    forward_output_layer(emb2, graphmet_output_0_weight, graphmet_output_0_bias, graphmet_output_2_weight, graphmet_output_2_bias, output);
 
     // Apply ReLU to the final output
     apply_relu(output, NUM_NODES);
 
     // Now, output contains the final results after the ReLU activation
     // print the outputs to verify
-    for (int i = 0; i < NUM_NODES; i++) {
-        printf("Output %d: %f\n", i, output[i]);
-    }
+    // for (int i = 0; i < NUM_NODES; i++) {
+    //     printf("Output %d: %f\n", i, output[i]);
+    // }
 
     return;
 }

@@ -33,7 +33,8 @@ void batch_normalization(float node_features[NUM_NODES][HIDDEN_DIM],
 
 // The edge convolution function with batch normalization and residual connection
 void edge_convolution(int num_edges,
-                      float emb[NUM_NODES][HIDDEN_DIM], 
+                      float emb[NUM_NODES][HIDDEN_DIM],
+                      float emb_out[NUM_NODES][HIDDEN_DIM], 
                       int edge_index[][2], 
                       float weight[HIDDEN_DIM][HIDDEN_DIM * 2], 
                       float bias[HIDDEN_DIM],
