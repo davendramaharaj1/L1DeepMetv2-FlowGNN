@@ -25,37 +25,37 @@ PYBIND11_MODULE(graphmetnetwork, m) {
             );
         })
 
-        .def("load_weights", &GraphMetNetwork::load_weights);
+        .def("load_weights", &GraphMetNetwork::load_weights)
 
-        .def("get_output", [](const GraphMetNetwork &gmn) {
+        .def("get_output", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes()}, gmn.get_output());
         })
 
-        .def("get_emb_cont", [](const GraphMetNetwork &gmn) {
+        .def("get_emb_cont", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM/2}, gmn.get_emb_cont());
         })
 
-        .def("get_emb_chrg", [](const GraphMetNetwork &gmn) {
+        .def("get_emb_chrg", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM/4}, gmn.get_emb_chrg());
         })
 
-        .def("get_emb_pdg", [](const GraphMetNetwork &gmn) {
+        .def("get_emb_pdg", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM/4}, gmn.get_emb_pdg());
         })
 
-        .def("get_emb_cat", [](const GraphMetNetwork &gmn) {
+        .def("get_emb_cat", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM/2}, gmn.get_emb_cat());
         })
 
-        .def("get_emb", [](const GraphMetNetwork &gmn) {
+        .def("get_emb", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_emb());
         })
 
-        .def("get_emb1", [](const GraphMetNetwork &gmn) {
+        .def("get_emb1", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_emb1());
         })
 
-        .def("get_emb2", [](const GraphMetNetwork &gmn) {
+        .def("get_emb2", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_emb2());
         });
 }

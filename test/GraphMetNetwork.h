@@ -9,6 +9,9 @@ class GraphMetNetwork {
         // Network Layers
         void GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], int x_cat[MAX_NODES][CAT_DIM], int num_nodes);
 
+        // helper methods
+        void load_weights();
+        
         // get the number of nodes used
         int get_num_nodes() { return this->num_nodes; }
 
@@ -23,6 +26,45 @@ class GraphMetNetwork {
         const float* get_emb2() const { return &emb2[0][0]; }
 
     private:
+
+        /** self.pdgs */
+        int pdgs[PDGS_SIZE] = {1, 2, 11, 13, 22, 130, 211};
+
+        /** normalization */
+        float norm[CONT_DIM] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+
+        // Weight arrays
+        float graphmet_embed_charge_weight[3][8];
+        float graphmet_embed_pdgid_weight[7][8];
+        float graphmet_embed_continuous_0_weight[16][6];
+        float graphmet_embed_continuous_0_bias[16];
+        float graphmet_embed_categorical_0_weight[16][16];
+        float graphmet_embed_categorical_0_bias[16];
+        float graphmet_encode_all_weight[32][32];
+        float graphmet_encode_all_bias[32];
+        float graphmet_bn_all_weight[32];
+        float graphmet_bn_all_bias[32];
+        float graphmet_bn_all_running_mean[32];
+        float graphmet_bn_all_running_var[32];
+        float graphmet_bn_all_batches_tracked[1];
+        float graphmet_conv_continuous_0_0_nn_0_weight[32][64];
+        float graphmet_conv_continuous_0_0_nn_0_bias[32];
+        float graphmet_conv_continuous_0_1_weight[32];
+        float graphmet_conv_continuous_0_1_bias[32];
+        float graphmet_conv_continuous_0_1_running_mean[32];
+        float graphmet_conv_continuous_0_1_running_var[32];
+        float graphmet_conv_continuous_0_1_num_batches_tracked[1];
+        float graphmet_conv_continuous_1_0_nn_0_weight[32][64];
+        float graphmet_conv_continuous_1_0_nn_0_bias[32];
+        float graphmet_conv_continuous_1_1_weight[32];
+        float graphmet_conv_continuous_1_1_bias[32];
+        float graphmet_conv_continuous_1_1_running_mean[32];
+        float graphmet_conv_continuous_1_1_running_var[32];
+        float graphmet_conv_continuous_1_1_num_batches_tracked[1];
+        float graphmet_output_0_weight[16][32];
+        float graphmet_output_0_bias[16];
+        float graphmet_output_2_weight[1][16];
+        float graphmet_output_2_bias[1];
     
         // Intermediate layer outputs
         float emb_cont[MAX_NODES][HIDDEN_DIM/2];
@@ -40,9 +82,6 @@ class GraphMetNetwork {
         int edge_index[MAX_EDGES][2];
         int num_edges;
         int num_nodes;
-
-        // helper methods
-        void load_weights();
 
         /** implementation of torch.nn.ELU() 
          * 

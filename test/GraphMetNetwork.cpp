@@ -9,6 +9,10 @@
 
 #include "GraphMetNetwork.h"
 
+GraphMetNetwork::GraphMetNetwork() {
+    // Constructor does nothing
+}
+
 void GraphMetNetwork::load_weights()
 {
     FILE* f;
