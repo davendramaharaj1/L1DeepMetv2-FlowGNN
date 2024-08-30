@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
+#include <pybind11/stl.h>
 #include "GraphMetNetwork.h"
 
 namespace py = pybind11;
@@ -10,6 +11,7 @@ PYBIND11_MODULE(graphmetnetwork, m) {
         .def("GraphMetNetworkLayers", [](GraphMetNetwork &gmn, py::array_t<float> x_cont, py::array_t<int> x_cat, int num_nodes) {
             gmn.GraphMetNetworkLayers(x_cont.mutable_data(), x_cat.mutable_data(), num_nodes);
         })
+        .def("load_weights", &GraphMetNetwork::load_weights);
         .def("get_output", [](const GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes()}, gmn.get_output());
         })

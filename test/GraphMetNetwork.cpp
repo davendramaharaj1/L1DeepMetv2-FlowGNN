@@ -3,138 +3,167 @@
 #include <cmath>
 #include <cstring>
 #include <cfloat>
+#include <string>
+#include <iostream>
+#include <stdexcept>
 
 #include "GraphMetNetwork.h"
 
 void GraphMetNetwork::load_weights()
 {
     FILE* f;
+    std::string weights = "../weights/";
 
-    f = fopen("graphnet.embed_charge.weight.bin", "r");
-    fread(graphmet_embed_charge_weight, sizeof(float), 24, f);
-    fclose(f);
+    // Helper function to open files and check for errors
+    auto safe_fopen = [](const std::string& file_path) -> FILE* {
+        FILE* file = fopen(file_path.c_str(), "rb");
+        if (!file) {
+            throw std::runtime_error("Error: Unable to open file " + file_path);
+        }
+        return file;
+    };
 
-    f = fopen("graphnet.embed_pdgid.weight.bin", "r");
-    fread(graphmet_embed_pdgid_weight, sizeof(float), 56, f);
-    fclose(f);
+    // Helper function to safely read data from files
+    auto safe_fread = [](void* ptr, size_t size, size_t count, FILE* file, const std::string& file_path) {
+        size_t read_count = fread(ptr, size, count, file);
+        if (read_count != count) {
+            throw std::runtime_error("Error: Unable to read the correct amount of data from " + file_path);
+        }
+    };
 
-    f = fopen("graphnet.embed_continuous.0.weight.bin", "r");
-    fread(graphmet_embed_continuous_0_weight, sizeof(float), 96, f);
-    fclose(f);
+    try {
+        // Load each weight file with error handling
+        f = safe_fopen(weights + "graphnet.embed_charge.weight.bin");
+        safe_fread(graphmet_embed_charge_weight, sizeof(float), 24, f, weights + "graphnet.embed_charge.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.embed_continuous.0.bias.bin", "r");
-    fread(graphmet_embed_continuous_0_bias, sizeof(float), 16, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.embed_pdgid.weight.bin");
+        safe_fread(graphmet_embed_pdgid_weight, sizeof(float), 56, f, weights + "graphnet.embed_pdgid.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.embed_categorical.0.weight.bin", "r");
-    fread(graphmet_embed_categorical_0_weight, sizeof(float), 256, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.embed_continuous.0.weight.bin");
+        safe_fread(graphmet_embed_continuous_0_weight, sizeof(float), 96, f, weights + "graphnet.embed_continuous.0.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.embed_categorical.0.bias.bin", "r");
-    fread(graphmet_embed_categorical_0_bias, sizeof(float), 16, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.embed_continuous.0.bias.bin");
+        safe_fread(graphmet_embed_continuous_0_bias, sizeof(float), 16, f, weights + "graphnet.embed_continuous.0.bias.bin");
+        fclose(f);
 
-    f = fopen("graphnet.encode_all.0.weight.bin", "r");
-    fread(graphmet_encode_all_weight, sizeof(float), 1024, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.embed_categorical.0.weight.bin");
+        safe_fread(graphmet_embed_categorical_0_weight, sizeof(float), 256, f, weights + "graphnet.embed_categorical.0.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.encode_all.0.bias.bin", "r");
-    fread(graphmet_encode_all_bias, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.embed_categorical.0.bias.bin");
+        safe_fread(graphmet_embed_categorical_0_bias, sizeof(float), 16, f, weights + "graphnet.embed_categorical.0.bias.bin");
+        fclose(f);
 
-    f = fopen("graphnet.bn_all.weight.bin", "r");
-    fread(graphmet_bn_all_weight, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.encode_all.0.weight.bin");
+        safe_fread(graphmet_encode_all_weight, sizeof(float), 1024, f, weights + "graphnet.encode_all.0.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.bn_all.bias.bin", "r");
-    fread(graphmet_bn_all_bias, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.encode_all.0.bias.bin");
+        safe_fread(graphmet_encode_all_bias, sizeof(float), 32, f, weights + "graphnet.encode_all.0.bias.bin");
+        fclose(f);
 
-    f = fopen("graphnet.bn_all.running_mean.bin", "r");
-    fread(graphmet_bn_all_running_mean, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.bn_all.weight.bin");
+        safe_fread(graphmet_bn_all_weight, sizeof(float), 32, f, weights + "graphnet.bn_all.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.bn_all.running_var.bin", "r");
-    fread(graphmet_bn_all_running_var, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.bn_all.bias.bin");
+        safe_fread(graphmet_bn_all_bias, sizeof(float), 32, f, weights + "graphnet.bn_all.bias.bin");
+        fclose(f);
 
-    f = fopen("graphnet.bn_all.num_batches_tracked.bin", "r");
-    fread(graphmet_bn_all_batches_tracked, sizeof(float), 1, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.bn_all.running_mean.bin");
+        safe_fread(graphmet_bn_all_running_mean, sizeof(float), 32, f, weights + "graphnet.bn_all.running_mean.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.0.0.nn.0.weight.bin", "r");
-    fread(graphmet_conv_continuous_0_0_nn_0_weight, sizeof(float), 2048, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.bn_all.running_var.bin");
+        safe_fread(graphmet_bn_all_running_var, sizeof(float), 32, f, weights + "graphnet.bn_all.running_var.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.0.0.nn.0.bias.bin", "r");
-    fread(graphmet_conv_continuous_0_0_nn_0_bias, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.bn_all.num_batches_tracked.bin");
+        safe_fread(graphmet_bn_all_batches_tracked, sizeof(float), 1, f, weights + "graphnet.bn_all.num_batches_tracked.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.0.1.weight.bin", "r");
-    fread(graphmet_conv_continuous_0_1_weight, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.0.0.nn.0.weight.bin");
+        safe_fread(graphmet_conv_continuous_0_0_nn_0_weight, sizeof(float), 2048, f, weights + "graphnet.conv_continuous.0.0.nn.0.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.0.1.bias.bin", "r");
-    fread(graphmet_conv_continuous_0_1_bias, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.0.0.nn.0.bias.bin");
+        safe_fread(graphmet_conv_continuous_0_0_nn_0_bias, sizeof(float), 32, f, weights + "graphnet.conv_continuous.0.0.nn.0.bias.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.0.1.running_mean.bin", "r");
-    fread(graphmet_conv_continuous_0_1_running_mean, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.0.1.weight.bin");
+        safe_fread(graphmet_conv_continuous_0_1_weight, sizeof(float), 32, f, weights + "graphnet.conv_continuous.0.1.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.0.1.running_var.bin", "r");
-    fread(graphmet_conv_continuous_0_1_running_var, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.0.1.bias.bin");
+        safe_fread(graphmet_conv_continuous_0_1_bias, sizeof(float), 32, f, weights + "graphnet.conv_continuous.0.1.bias.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.0.1.num_batches_tracked.bin", "r");
-    fread(graphmet_conv_continuous_0_1_num_batches_tracked, sizeof(float), 1, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.0.1.running_mean.bin");
+        safe_fread(graphmet_conv_continuous_0_1_running_mean, sizeof(float), 32, f, weights + "graphnet.conv_continuous.0.1.running_mean.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.1.0.nn.0.weight.bin", "r");
-    fread(graphmet_conv_continuous_1_0_nn_0_weight, sizeof(float), 2048, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.0.1.running_var.bin");
+        safe_fread(graphmet_conv_continuous_0_1_running_var, sizeof(float), 32, f, weights + "graphnet.conv_continuous.0.1.running_var.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.1.0.nn.0.bias.bin", "r");
-    fread(graphmet_conv_continuous_1_0_nn_0_bias, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.0.1.num_batches_tracked.bin");
+        safe_fread(graphmet_conv_continuous_0_1_num_batches_tracked, sizeof(float), 1, f, weights + "graphnet.conv_continuous.0.1.num_batches_tracked.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.1.1.weight.bin", "r");
-    fread(graphmet_conv_continuous_1_1_weight, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.1.0.nn.0.weight.bin");
+        safe_fread(graphmet_conv_continuous_1_0_nn_0_weight, sizeof(float), 2048, f, weights + "graphnet.conv_continuous.1.0.nn.0.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.1.1.bias.bin", "r");
-    fread(graphmet_conv_continuous_1_1_bias, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.1.0.nn.0.bias.bin");
+        safe_fread(graphmet_conv_continuous_1_0_nn_0_bias, sizeof(float), 32, f, weights + "graphnet.conv_continuous.1.0.nn.0.bias.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.1.1.running_mean.bin", "r");
-    fread(graphmet_conv_continuous_1_1_running_mean, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.1.1.weight.bin");
+        safe_fread(graphmet_conv_continuous_1_1_weight, sizeof(float), 32, f, weights + "graphnet.conv_continuous.1.1.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.1.1.running_var.bin", "r");
-    fread(graphmet_conv_continuous_1_1_running_var, sizeof(float), 32, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.1.1.bias.bin");
+        safe_fread(graphmet_conv_continuous_1_1_bias, sizeof(float), 32, f, weights + "graphnet.conv_continuous.1.1.bias.bin");
+        fclose(f);
 
-    f = fopen("graphnet.conv_continuous.1.1.num_batches_tracked.bin", "r");
-    fread(graphmet_conv_continuous_1_1_num_batches_tracked, sizeof(float), 1, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.1.1.running_mean.bin");
+        safe_fread(graphmet_conv_continuous_1_1_running_mean, sizeof(float), 32, f, weights + "graphnet.conv_continuous.1.1.running_mean.bin");
+        fclose(f);
 
-    f = fopen("graphnet.output.0.weight.bin", "r");
-    fread(graphmet_output_0_weight, sizeof(float), 512, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.1.1.running_var.bin");
+        safe_fread(graphmet_conv_continuous_1_1_running_var, sizeof(float), 32, f, weights + "graphnet.conv_continuous.1.1.running_var.bin");
+        fclose(f);
 
-    f = fopen("graphnet.output.0.bias.bin", "r");
-    fread(graphmet_output_0_bias, sizeof(float), 16, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.conv_continuous.1.1.num_batches_tracked.bin");
+        safe_fread(graphmet_conv_continuous_1_1_num_batches_tracked, sizeof(float), 1, f, weights + "graphnet.conv_continuous.1.1.num_batches_tracked.bin");
+        fclose(f);
 
-    f = fopen("graphnet.output.2.weight.bin", "r");
-    fread(graphmet_output_2_weight, sizeof(float), 16, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.output.0.weight.bin");
+        safe_fread(graphmet_output_0_weight, sizeof(float), 512, f, weights + "graphnet.output.0.weight.bin");
+        fclose(f);
 
-    f = fopen("graphnet.output.2.bias.bin", "r");
-    fread(graphmet_output_2_bias, sizeof(float), 1, f);
-    fclose(f);
+        f = safe_fopen(weights + "graphnet.output.0.bias.bin");
+        safe_fread(graphmet_output_0_bias, sizeof(float), 16, f, weights + "graphnet.output.0.bias.bin");
+        fclose(f);
 
+        f = safe_fopen(weights + "graphnet.output.2.weight.bin");
+        safe_fread(graphmet_output_2_weight, sizeof(float), 16, f, weights + "graphnet.output.2.weight.bin");
+        fclose(f);
+
+        f = safe_fopen(weights + "graphnet.output.2.bias.bin");
+        safe_fread(graphmet_output_2_bias, sizeof(float), 1, f, weights + "graphnet.output.2.bias.bin");
+        fclose(f);
+
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        throw; // Re-throw the exception after logging it
+    }
 }
+
+
 
 float GraphMetNetwork::ELU(float x, float alpha)
 {
