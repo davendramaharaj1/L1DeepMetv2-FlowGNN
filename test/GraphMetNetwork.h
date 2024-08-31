@@ -12,8 +12,9 @@ class GraphMetNetwork {
         // helper methods
         void load_weights();
         
-        // get the number of nodes used
+        // getters the number of nodes used
         int get_num_nodes() { return this->num_nodes; }
+        int get_num_edges() { return this->num_edges; }
 
         // methods to get intermediate variables
         const float* get_output() const { return output; }

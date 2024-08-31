@@ -1,5 +1,5 @@
 /** Model Hyperparameters */
-#define MAX_NODES 1024 
+#define MAX_NODES 2048 
 #define NUM_FEAT 8      // each particle has 8 features 
 #define CONT_DIM 6      // 6 real number features
 #define CAT_DIM 2       // 2 categorical features
@@ -7,7 +7,7 @@
 #define OUTPUT_DIM 1
 
 #define PDGS_SIZE 7
-#define MAX_EDGES 1000
+#define MAX_EDGES 4096
 #define CONV_DEPTH 2
 
 #define epsilon 0.00001

@@ -194,7 +194,7 @@ void GraphMetNetwork::radius_graph(float etaphi[][2], int num_nodes, float r, in
 
             float dist_sq = squared_distance(etaphi[i][0], etaphi[i][1], etaphi[j][0], etaphi[j][1]);
 
-            if (dist_sq <= r_squared) {
+            if (dist_sq < r_squared) {
 
                 if (num_edges < max_edges) {
                     edge_index[num_edges][0] = i;
@@ -365,7 +365,7 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     }
 
     // radius_graph(etaphi, MAX_NODES, batch, deltaR, edge_index, &num_edges);
-    radius_graph(etaphi, this->num_nodes, deltaR, edge_index, &num_edges, 0, MAX_EDGES);
+    radius_graph(etaphi, this->num_nodes, deltaR, edge_index, &this->num_edges, 0, MAX_EDGES);
 
 
     // x_cont *= self.datanorm
