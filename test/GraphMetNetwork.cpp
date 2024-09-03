@@ -535,14 +535,33 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     */
     // memset(emb_cat, 0, MAX_NODES * HIDDEN_DIM/2 * sizeof(float));
 
-    for (int i = 0; i < this->_num_nodes; i++) {
-        for (int j = 0; j < HIDDEN_DIM / 2; j++) {
-            // emb_cat[i][j] = 0;
-            for (int k = 0; k < HIDDEN_DIM / 2; k++) {
-                emb_cat[i][j] += graphnet_embed_categorical_0_weight[j][k] * (emb_chrg[i][k % (HIDDEN_DIM / 4)] + emb_pdg[i][k % (HIDDEN_DIM / 4)]);
-            }
-            emb_cat[i][j] += graphnet_embed_categorical_0_bias[j];
+    // for (int i = 0; i < this->_num_nodes; i++) {
+    //     for (int j = 0; j < HIDDEN_DIM / 2; j++) {
+    //         for (int k = 0; k < HIDDEN_DIM / 2; k++) {
+    //             emb_cat[i][j] += graphnet_embed_categorical_0_weight[j][k] * (emb_chrg[i][k % (HIDDEN_DIM / 4)] + emb_pdg[i][k % (HIDDEN_DIM / 4)]);
+    //         }
+    //         emb_cat[i][j] += graphnet_embed_categorical_0_bias[j];
 
+    //         emb_cat[i][j] = ELU(emb_cat[i][j], 1.0);
+    //     }
+    // }
+
+    // Concatenate emb_chrg and emb_pdg into emb_cat_input
+    float emb_cat_input[num_nodes][HIDDEN_DIM / 2];
+    for (int i = 0; i < num_nodes; ++i) {
+        for (int j = 0; j < HIDDEN_DIM / 4; ++j) {
+            emb_cat_input[i][j] = emb_chrg[i][j];
+            emb_cat_input[i][j + HIDDEN_DIM / 4] = emb_pdg[i][j];
+        }
+    }
+
+    // Linear transformation: emb_cat = emb_cat_input * weight^T + bias
+    for (int i = 0; i < num_nodes; ++i) {
+        for (int j = 0; j < HIDDEN_DIM / 2; ++j) {
+            emb_cat[i][j] = graphnet_embed_categorical_0_bias[j]; // Initialize with bias
+            for (int k = 0; k < HIDDEN_DIM / 2; ++k) {
+                emb_cat[i][j] += emb_cat_input[i][k] * graphnet_embed_categorical_0_weight[j][k];
+            }
             emb_cat[i][j] = ELU(emb_cat[i][j], 1.0);
         }
     }
