@@ -10,13 +10,27 @@
 #include "GraphMetNetwork.h"
 
 GraphMetNetwork::GraphMetNetwork() {
-    // Constructor does nothing
+    // Initialize all internal variables
+    memset(etaphi, -1, MAX_NODES * 2 * sizeof(float));
+    memset(edge_index, -1, MAX_EDGES * 2 * sizeof(int));
+    num_edges = 0;
+    _num_nodes = 0;
+
+    // Initialize all intermediate variables
+    memset(emb_cont, 0, MAX_NODES * HIDDEN_DIM/2 * sizeof(float));
+    memset(emb_chrg, 0, MAX_NODES * HIDDEN_DIM/4 * sizeof(float));
+    memset(emb_pdg, 0, MAX_NODES * HIDDEN_DIM/4 * sizeof(float));
+    memset(emb_cat, 0, MAX_NODES * HIDDEN_DIM/2 * sizeof(float));
+    memset(encode_all, 0, MAX_NODES * HIDDEN_DIM * sizeof(float));
+    memset(emb, 0, MAX_NODES*HIDDEN_DIM*sizeof(float));
+    memset(emb1, 0, MAX_NODES*HIDDEN_DIM*sizeof(float));
+    memset(emb2, 0, MAX_NODES*HIDDEN_DIM*sizeof(float));
+    memset(output, 0, MAX_NODES*OUTPUT_DIM*sizeof(float));
 }
 
-void GraphMetNetwork::load_weights()
+void GraphMetNetwork::load_weights(std::string weights)
 {
     FILE* f;
-    std::string weights = "../weights/";
 
     // Helper function to open files and check for errors
     auto safe_fopen = [](const std::string& file_path) -> FILE* {
@@ -174,31 +188,87 @@ float GraphMetNetwork::ELU(float x, float alpha)
     return x > 0 ? x : alpha*(exp(x)-1);
 }
 
+float GraphMetNetwork::euclidean_distance(const std::vector<double>& point1, const std::vector<double>& point2) {
+    float sum = 0.0;
+    for (size_t i = 0; i < point1.size(); ++i) {
+        float diff = point1[i] - point2[i];
+        sum += diff * diff;
+    }
+    return sqrt(sum);
+}
+
+// Function to find neighbors within each batch
+std::vector<std::pair<int, int>> GraphMetNetwork::find_neighbors_by_batch(
+                                                        const std::vector<std::vector<double>>& points,
+                                                        double radius,
+                                                        const std::vector<int>& batch_indices 
+                                                        ) {
+    std::vector<std::pair<int, int>> neighbors;
+    // Group points by batch
+    std::unordered_map<int, std::vector<int>> batch_to_points;
+    for (size_t i = 0; i < batch_indices.size(); ++i) {
+        batch_to_points[batch_indices[i]].push_back(i);
+    }
+
+    // Process each batch independently
+    for (const auto& batch : batch_to_points) {
+        const auto& batch_points = batch.second;
+        size_t num_points = batch_points.size();
+
+        for (size_t i = 0; i < num_points; ++i) {
+            for (size_t j = i + 1; j < num_points; ++j) {
+                int idx1 = batch_points[i];
+                int idx2 = batch_points[j];
+
+                double dist = euclidean_distance(points[idx1], points[idx2]);
+                if (dist <= radius) {
+                    neighbors.emplace_back(idx1, idx2);
+                    neighbors.emplace_back(idx2, idx1);  // Since the relation is symmetric
+                }
+            }
+        }
+    }
+    return neighbors;
+}
+
 float GraphMetNetwork::squared_distance(float x1, float y1, float x2, float y2)
 {
     float dist = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     return dist;
 }
 
-void GraphMetNetwork::radius_graph(float etaphi[][2], int num_nodes, float r, int edge_index[][2], int *edge_cnt, int include_loop, int max_edges) {
+float GraphMetNetwork::euclidean(float point1[2], float point2[2]) {
+    float sum = 0.0;
+    float x_diff = point1[0] - point2[0];
+    float y_diff = point1[1] - point2[1];
+    sum = (x_diff * x_diff) + (y_diff * y_diff);
+    return sqrt(sum);
+}
 
-    int num_edges = 0;
+void GraphMetNetwork::radius_graph(float etaphi[][2], int batch[MAX_NODES], int num_nodes, float r, int max_edges) {
 
-    float r_squared = r * r;
+    float radius = r;
 
     for (int i = 0; i < num_nodes; i++) {
-        for (int j = 0; j < num_nodes; j++) {
-            if (!include_loop && i == j) {
+        for (int j = i + 1; j < num_nodes; j++) {
+            
+            // check if points belong to the same batch
+            if (batch[i] != batch[j]) {
                 continue;
             }
 
-            float dist_sq = squared_distance(etaphi[i][0], etaphi[i][1], etaphi[j][0], etaphi[j][1]);
+            // float dist_sq = squared_distance(etaphi[i][0], etaphi[i][1], etaphi[j][0], etaphi[j][1]);
+            float dist = euclidean(etaphi[i], etaphi[j]);
 
-            if (dist_sq < r_squared) {
+            if (dist <= radius) {
 
                 if (num_edges < max_edges) {
                     edge_index[num_edges][0] = i;
                     edge_index[num_edges][1] = j;
+                    num_edges++;
+
+                    edge_index[num_edges][0] = j;
+                    edge_index[num_edges][1] = i;
                     num_edges++;
                 } else {
                     // Edge list is full
@@ -208,8 +278,6 @@ void GraphMetNetwork::radius_graph(float etaphi[][2], int num_nodes, float r, in
             }
         }
     }
-
-    *edge_cnt = num_edges;
 }
 
 void GraphMetNetwork::matmul_and_add_bias(float result[HIDDEN_DIM], float vector[HIDDEN_DIM * 2], float weight[HIDDEN_DIM][HIDDEN_DIM * 2], float bias[HIDDEN_DIM]) {
@@ -329,17 +397,17 @@ void GraphMetNetwork::forward_output_layer(float emb[MAX_NODES][HIDDEN_DIM],
     float temp_out[MAX_NODES][OUTPUT_DIM];
 
     // Apply the first linear layer
-    for (int i = 0; i < this->num_nodes; ++i) {
+    for (int i = 0; i < this->_num_nodes; ++i) {
         matvec_multiply_and_add_bias(hidden[i], weight1, emb[i], bias1);
     }
 
     // Apply ELU activation function
-    for (int i = 0; i < this->num_nodes; ++i) {
+    for (int i = 0; i < this->_num_nodes; ++i) {
         apply_elu(hidden[i], 1.0); // assuming alpha is 1.0 for ELU
     }
 
     // Apply the second linear layer to get the final output
-    for (int i = 0; i < this->num_nodes; ++i) {
+    for (int i = 0; i < this->_num_nodes; ++i) {
         temp_out[i][0] = bias2[0]; // Initialize with bias for the output layer
         for (int k = 0; k < HIDDEN_DIM/2; ++k) {
             temp_out[i][0] += weight2[0][k] * hidden[i][k];
@@ -347,38 +415,57 @@ void GraphMetNetwork::forward_output_layer(float emb[MAX_NODES][HIDDEN_DIM],
     }
 
     // squeeze the '1' dimension from temp_out
-    for (int i = 0; i < this->num_nodes; i++)
+    for (int i = 0; i < this->_num_nodes; i++)
     {
         output[i] = temp_out[i][0];
     }
 }
 
 // Implementatin of GNN Layers...Equivalent of the Forward Layer
-void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], int x_cat[MAX_NODES][CAT_DIM], int num_nodes)
+void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], int x_cat[MAX_NODES][CAT_DIM], int batch[MAX_NODES], int num_nodes)
 {
     // Set the number of nodes
-    this->num_nodes = num_nodes;
+    this->_num_nodes = num_nodes;
 
-    for (int i = 0; i < this->num_nodes; i++) {
+    // copy x_cont into internal input
+    for (int i = 0; i < num_nodes; i++){
+        for (int j = 0; j < CONT_DIM; j++){
+            _x_cont[i][j] = x_cont[i][j];
+        }
+    }
+
+    // copy x_cat into internal input
+    for (int i = 0; i < num_nodes; i++){
+        for (int j = 0; j < CAT_DIM; j++){
+            _x_cat[i][j] = x_cat[i][j];
+        }
+    }
+
+    // copy batch into internal input
+    for (int i = 0; i < num_nodes; i++){
+        _batch[i] = batch[i];
+    }
+
+    for (int i = 0; i < this->_num_nodes; i++) {
         etaphi[i][0] = x_cont[i][3];  // 4th column (index 3) of data
         etaphi[i][1] = x_cont[i][4];  // 5th column (index 4) of data
     }
 
     // radius_graph(etaphi, MAX_NODES, batch, deltaR, edge_index, &num_edges);
-    radius_graph(etaphi, this->num_nodes, deltaR, edge_index, &this->num_edges, 0, MAX_EDGES);
+    radius_graph(etaphi, batch, this->_num_nodes, deltaR, MAX_EDGES);
 
 
     // x_cont *= self.datanorm
-    for (int i = 0; i < this->num_nodes; i++) {
+    for (int i = 0; i < this->_num_nodes; i++) {
         for (int j = 0; j < CONT_DIM; j++) {
             x_cont[i][j] *= norm[j];
         }
     }
 
     /** emb_cont = self.embed_continuous(x_cont) */
-    memset(emb_cont, 0, MAX_NODES * HIDDEN_DIM/2 * sizeof(float));
+    // memset(emb_cont, 0, MAX_NODES * HIDDEN_DIM/2 * sizeof(float));
     /** shape: (MAX_NODES, CONT_DIM) * (CONT_DIM, HIDDEN_NUM//2)  = (MAX_NODES, HIDDEN_NUM//2) */
-    for (int i = 0; i < this->num_nodes; i++)
+    for (int i = 0; i < this->_num_nodes; i++)
     {
         for(int j = 0; j < HIDDEN_DIM/2; j++)
         {
@@ -396,7 +483,7 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     }
 
     /** emb_chrg = self.embed_charge(x_cat[:, 1] + 1) */
-    for (int i = 0; i < this->num_nodes; i++)
+    for (int i = 0; i < this->_num_nodes; i++)
     {
         /** get the indx */
         int idx = x_cat[i][1] + 1;
@@ -408,8 +495,8 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     }
 
     /* pdg_remap = torch.abs(x_cat[:, 0]) */
-    int pdg_remap[this->num_nodes];
-    for (int i = 0; i < this->num_nodes; i++)
+    int pdg_remap[this->_num_nodes];
+    for (int i = 0; i < this->_num_nodes; i++)
     {
         pdg_remap[i] = abs(x_cat[i][0]);
     }
@@ -421,7 +508,7 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     for (int i = 0; i < PDGS_SIZE; i++)
     {
         int pdgval = pdgs[i];
-        for (int row = 0; row < this->num_nodes; row++)
+        for (int row = 0; row < this->_num_nodes; row++)
         {
             if (pdg_remap[row] == pdgval)
             {
@@ -431,7 +518,7 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     }
 
     /* emb_pdg = self.embed_pdgid(pdg_remap) */
-    for (int i = 0; i < this->num_nodes; i++)
+    for (int i = 0; i < this->_num_nodes; i++)
     {
         /** get the indx */
         int idx = pdg_remap[i];
@@ -446,9 +533,9 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
      * 
      * Shape: (MAX_NODES, HIDDEN_DIM/2) * (2*HIDDEN_DIM/4, HIDDEN_DIM/2) = (MAX_NODES, HIDDEN_DIM/2)
     */
-    memset(emb_cat, 0, MAX_NODES * HIDDEN_DIM/2 * sizeof(float));
+    // memset(emb_cat, 0, MAX_NODES * HIDDEN_DIM/2 * sizeof(float));
 
-    for (int i = 0; i < this->num_nodes; i++) {
+    for (int i = 0; i < this->_num_nodes; i++) {
         for (int j = 0; j < HIDDEN_DIM / 2; j++) {
             // emb_cat[i][j] = 0;
             for (int k = 0; k < HIDDEN_DIM / 2; k++) {
@@ -463,8 +550,8 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     /** self.encode_all(torch.cat([emb_cat, emb_cont], dim=1)) 
      * Shape: (MAX_NODES, HIDDEN_DIM) * (HIDDEN_DIM, HIDDEN_DIM) = (MAX_NODES, HIDDEN_DIM)
     */
-    memset(emb, 0, MAX_NODES*HIDDEN_DIM*sizeof(float));
-    for (int i = 0; i < this->num_nodes; i++) {
+    // memset(emb, 0, MAX_NODES*HIDDEN_DIM*sizeof(float));
+    for (int i = 0; i < this->_num_nodes; i++) {
         for (int j = 0; j < HIDDEN_DIM; j++) {
             emb[i][j] = 0;
             for (int k = 0; k < HIDDEN_DIM; k++) {
@@ -477,7 +564,7 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
 
     /* emb = self.bn_all(self.encode_all(torch.cat([emb_cat, emb_cont], dim=1))) */
     // memset(emb, 0, MAX_NODES*HIDDEN_DIM*sizeof(float));
-    for (int row = 0; row < this->num_nodes; row++)
+    for (int row = 0; row < this->_num_nodes; row++)
     {
         for (int col = 0; col < HIDDEN_DIM; col++)
         {
@@ -523,13 +610,13 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     }
 
     // out = self.output(emb)
-    memset(output, 0, MAX_NODES*OUTPUT_DIM*sizeof(float));
+    // memset(output, 0, MAX_NODES*OUTPUT_DIM*sizeof(float));
 
     // Call the output layer
     forward_output_layer(emb2, graphmet_output_0_weight, graphmet_output_0_bias, graphmet_output_2_weight, graphmet_output_2_bias, output);
 
     // Apply ReLU to the final output
-    apply_relu(output, this->num_nodes);
+    apply_relu(output, this->_num_nodes);
 
     return;
 }

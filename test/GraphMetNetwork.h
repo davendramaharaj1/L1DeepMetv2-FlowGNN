@@ -1,3 +1,5 @@
+#include <vector>
+#include <unordered_map>
 #include "parameters.h"
 
 class GraphMetNetwork {
@@ -7,14 +9,21 @@ class GraphMetNetwork {
         GraphMetNetwork();
 
         // Network Layers
-        void GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], int x_cat[MAX_NODES][CAT_DIM], int num_nodes);
+        void GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], int x_cat[MAX_NODES][CAT_DIM], int batch[MAX_NODES], int num_nodes);
 
         // helper methods
-        void load_weights();
+        void load_weights(std::string weights);
+
+        // getters for inputs
+        const float* get_x_cont() const { return &_x_cont[0][0]; }
+        const int* get_x_cat() const { return &_x_cat[0][0]; }
+        const int* get_batch() const { return _batch; }
+        int get_num_nodes() { return this->_num_nodes; }
         
-        // getters the number of nodes used
-        int get_num_nodes() { return this->num_nodes; }
+        // getters for internal variables
         int get_num_edges() { return this->num_edges; }
+        int* get_edge_index() { return &edge_index[0][0]; }
+        float* get_etaphi() { return &etaphi[0][0]; }
 
         // methods to get intermediate variables
         const float* get_output() const { return output; }
@@ -66,6 +75,12 @@ class GraphMetNetwork {
         float graphmet_output_0_bias[16];
         float graphmet_output_2_weight[1][16];
         float graphmet_output_2_bias[1];
+
+        // Inputs
+        float _x_cont[MAX_NODES][CONT_DIM];
+        int _x_cat[MAX_NODES][CAT_DIM];
+        int _batch[MAX_NODES];
+        int _num_nodes;
     
         // Intermediate layer outputs
         float emb_cont[MAX_NODES][HIDDEN_DIM/2];
@@ -82,7 +97,6 @@ class GraphMetNetwork {
         float etaphi[MAX_NODES][2];
         int edge_index[MAX_EDGES][2];
         int num_edges;
-        int num_nodes;
 
         /** implementation of torch.nn.ELU() 
          * 
@@ -91,12 +105,24 @@ class GraphMetNetwork {
         */
         float ELU(float x, float alpha);
 
+        float euclidean(float point1[2], float point2[2]);
+
+        // Function to calculate the Euclidean distance between two points
+        float euclidean_distance(const std::vector<double>& point1, const std::vector<double>& point2);
+
+        std::vector<std::pair<int, int>> find_neighbors_by_batch(const std::vector<std::vector<double>>& points,
+                                                            double radius, 
+                                                            const std::vector<int>& batch_indices
+                                                            );
+
         // Calculate squared distance
         float squared_distance(float x1, float y1, float x2, float y2);
 
 
         // Naive radius graph function
-        void radius_graph(float etaphi[][2], int num_nodes, float r, int edge_index[][2], int *edge_cnt, int include_loop, int max_edges);
+        // void radius_graph(float etaphi[][2], int batch[MAX_NODES], int num_nodes, float r, int edge_index[][2], int *edge_cnt, int include_loop, int max_edges);
+        void radius_graph(float etaphi[][2], int batch[MAX_NODES], int num_nodes, float r, int max_edges);
+
 
         // Utility function to perform matrix multiplication followed by bias addition per individual data vector
         void matmul_and_add_bias(float result[HIDDEN_DIM], float vector[HIDDEN_DIM * 2], float weight[HIDDEN_DIM][HIDDEN_DIM * 2], float bias[HIDDEN_DIM]);

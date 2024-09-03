@@ -8,11 +8,15 @@ namespace py = pybind11;
 PYBIND11_MODULE(graphmetnetwork, m) {
     py::class_<GraphMetNetwork>(m, "GraphMetNetwork")
 
+
+        // constructor
         .def(py::init<>())
 
-        .def("GraphMetNetworkLayers", [](GraphMetNetwork &gmn, py::array_t<float> x_cont, py::array_t<int> x_cat, int num_nodes) {
+        // forward layer
+        .def("GraphMetNetworkLayers", [](GraphMetNetwork &gmn, py::array_t<float> x_cont, py::array_t<int> x_cat, py::array_t<int> batch, int num_nodes) {
             auto buf_x_cont = x_cont.request();
             auto buf_x_cat = x_cat.request();
+            auto buf_batch = batch.request();
 
             if (buf_x_cont.ndim != 2 || buf_x_cat.ndim != 2) {
                 throw std::runtime_error("Array dimensions mismatch.");
@@ -21,12 +25,47 @@ PYBIND11_MODULE(graphmetnetwork, m) {
             gmn.GraphMetNetworkLayers(
             reinterpret_cast<float (*)[CONT_DIM]>(buf_x_cont.ptr),
             reinterpret_cast<int (*)[CAT_DIM]>(buf_x_cat.ptr),
+            reinterpret_cast<int *>(buf_batch.ptr),
             num_nodes
             );
         })
 
-        .def("load_weights", &GraphMetNetwork::load_weights)
+        // loading weights
+        .def("load_weights", [](GraphMetNetwork &gmn, std::string weights){
+            gmn.load_weights(weights);
+            })
+        
+        // input getters
+        .def("get_x_cont", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({gmn.get_num_nodes(), CONT_DIM}, gmn.get_x_cont());
+        })
 
+        .def("get_x_cat", [](GraphMetNetwork &gmn) {
+            return py::array_t<int>({gmn.get_num_nodes(), CAT_DIM}, gmn.get_x_cat());
+        })
+
+        .def("get_batch", [](GraphMetNetwork &gmn) {
+            return py::array_t<int>({gmn.get_num_nodes()}, gmn.get_batch());
+        })
+
+        .def("get_num_nodes", [](GraphMetNetwork &gmn) {
+            return gmn.get_num_nodes();
+        })
+
+        // internal variable getters
+        .def("get_edge_index", [](GraphMetNetwork &gmn) {
+            return py::array_t<int>({gmn.get_num_edges(), 2}, gmn.get_edge_index());
+        })
+
+        .def("get_etaphi", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({gmn.get_num_nodes(), 2}, gmn.get_etaphi());
+        })
+
+        .def("get_num_edges", [](GraphMetNetwork &gmn) {
+            return gmn.get_num_edges();
+        })
+
+        // intermediate getters
         .def("get_output", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes()}, gmn.get_output());
         })
@@ -57,14 +96,6 @@ PYBIND11_MODULE(graphmetnetwork, m) {
 
         .def("get_emb2", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_emb2());
-        })
-
-        .def("get_num_nodes", [](GraphMetNetwork &gmn) {
-            return gmn.get_num_nodes();
-        })
-
-        .def("get_num_edges", [](GraphMetNetwork &gmn) {
-            return gmn.get_num_edges();
         });
 }
 
