@@ -42,27 +42,27 @@ class GraphMetNetwork {
         const float* get_graphnet_embed_continuous_0_bias() const { return &graphnet_embed_continuous_0_bias[0]; }
         const float* get_graphnet_embed_categorical_0_weight() const { return &graphnet_embed_categorical_0_weight[0][0]; }
         const float* get_graphnet_embed_categorical_0_bias() const { return &graphnet_embed_categorical_0_bias[0]; }
-        const float* get_graphnet_encode_all_weight() const { return &graphnet_encode_all_weight[0][0]; }
-        const float* get_graphnet_encode_all_bias() const { return &graphnet_encode_all_bias[0]; }
+        const float* get_graphnet_encode_all_0_weight() const { return &graphnet_encode_all_0_weight[0][0]; }
+        const float* get_graphnet_encode_all_0_bias() const { return &graphnet_encode_all_0_bias[0]; }
         const float* get_graphnet_bn_all_weight() const { return &graphnet_bn_all_weight[0]; }
         const float* get_graphnet_bn_all_bias() const { return &graphnet_bn_all_bias[0]; }
         const float* get_graphnet_bn_all_running_mean() const { return &graphnet_bn_all_running_mean[0]; }
         const float* get_graphnet_bn_all_running_var() const { return &graphnet_bn_all_running_var[0]; }
-        const float* get_graphnet_bn_all_batches_tracked() const { return &graphnet_bn_all_batches_tracked[0]; }
+        const int* get_graphnet_bn_all_num_batches_tracked() const { return &graphnet_bn_all_num_batches_tracked[0]; }
         const float* get_graphnet_conv_continuous_0_0_nn_0_weight() const { return &graphnet_conv_continuous_0_0_nn_0_weight[0][0]; }
         const float* get_graphnet_conv_continuous_0_0_nn_0_bias() const { return &graphnet_conv_continuous_0_0_nn_0_bias[0]; }
         const float* get_graphnet_conv_continuous_0_1_weight() const { return &graphnet_conv_continuous_0_1_weight[0]; }
         const float* get_graphnet_conv_continuous_0_1_bias() const { return &graphnet_conv_continuous_0_1_bias[0]; }
         const float* get_graphnet_conv_continuous_0_1_running_mean() const { return &graphnet_conv_continuous_0_1_running_mean[0]; }
         const float* get_graphnet_conv_continuous_0_1_running_var() const { return &graphnet_conv_continuous_0_1_running_var[0]; }
-        const float* get_graphnet_conv_continuous_0_1_num_batches_tracked() const { return &graphnet_conv_continuous_0_1_num_batches_tracked[0]; }
+        const int* get_graphnet_conv_continuous_0_1_num_batches_tracked() const { return &graphnet_conv_continuous_0_1_num_batches_tracked[0]; }
         const float* get_graphnet_conv_continuous_1_0_nn_0_weight() const { return &graphnet_conv_continuous_1_0_nn_0_weight[0][0]; }
         const float* get_graphnet_conv_continuous_1_0_nn_0_bias() const { return &graphnet_conv_continuous_1_0_nn_0_bias[0]; }
         const float* get_graphnet_conv_continuous_1_1_weight() const { return &graphnet_conv_continuous_1_1_weight[0]; }
         const float* get_graphnet_conv_continuous_1_1_bias() const { return &graphnet_conv_continuous_1_1_bias[0]; }
         const float* get_graphnet_conv_continuous_1_1_running_mean() const { return &graphnet_conv_continuous_1_1_running_mean[0]; }
         const float* get_graphnet_conv_continuous_1_1_running_var() const { return &graphnet_conv_continuous_1_1_running_var[0]; }
-        const float* get_graphnet_conv_continuous_1_1_num_batches_tracked() const { return &graphnet_conv_continuous_1_1_num_batches_tracked[0]; }
+        const int* get_graphnet_conv_continuous_1_1_num_batches_tracked() const { return &graphnet_conv_continuous_1_1_num_batches_tracked[0]; }
         const float* get_graphnet_output_0_weight() const { return &graphnet_output_0_weight[0][0]; }
         const float* get_graphnet_output_0_bias() const { return &graphnet_output_0_bias[0]; }
         const float* get_graphnet_output_2_weight() const { return &graphnet_output_2_weight[0][0]; }
@@ -84,27 +84,27 @@ class GraphMetNetwork {
         float graphnet_embed_continuous_0_bias[16];
         float graphnet_embed_categorical_0_weight[16][16];
         float graphnet_embed_categorical_0_bias[16];
-        float graphnet_encode_all_weight[32][32];
-        float graphnet_encode_all_bias[32];
+        float graphnet_encode_all_0_weight[32][32];
+        float graphnet_encode_all_0_bias[32];
         float graphnet_bn_all_weight[32];
         float graphnet_bn_all_bias[32];
         float graphnet_bn_all_running_mean[32];
         float graphnet_bn_all_running_var[32];
-        float graphnet_bn_all_batches_tracked[1];
+        int graphnet_bn_all_num_batches_tracked[1];
         float graphnet_conv_continuous_0_0_nn_0_weight[32][64];
         float graphnet_conv_continuous_0_0_nn_0_bias[32];
         float graphnet_conv_continuous_0_1_weight[32];
         float graphnet_conv_continuous_0_1_bias[32];
         float graphnet_conv_continuous_0_1_running_mean[32];
         float graphnet_conv_continuous_0_1_running_var[32];
-        float graphnet_conv_continuous_0_1_num_batches_tracked[1];
+        int graphnet_conv_continuous_0_1_num_batches_tracked[1];
         float graphnet_conv_continuous_1_0_nn_0_weight[32][64];
         float graphnet_conv_continuous_1_0_nn_0_bias[32];
         float graphnet_conv_continuous_1_1_weight[32];
         float graphnet_conv_continuous_1_1_bias[32];
         float graphnet_conv_continuous_1_1_running_mean[32];
         float graphnet_conv_continuous_1_1_running_var[32];
-        float graphnet_conv_continuous_1_1_num_batches_tracked[1];
+        int graphnet_conv_continuous_1_1_num_batches_tracked[1];
         float graphnet_output_0_weight[16][32];
         float graphnet_output_0_bias[16];
         float graphnet_output_2_weight[1][16];

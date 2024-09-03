@@ -123,12 +123,12 @@ PYBIND11_MODULE(graphmetnetwork, m) {
             return py::array_t<float>({16}, gmn.get_graphnet_embed_categorical_0_bias());
         })
 
-        .def("get_graphnet_encode_all_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32, 32}, gmn.get_graphnet_encode_all_weight());
+        .def("get_graphnet_encode_all_0_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32, 32}, gmn.get_graphnet_encode_all_0_weight());
         })
 
-        .def("get_graphnet_encode_all_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphnet_encode_all_bias());
+        .def("get_graphnet_encode_all_0_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_encode_all_0_bias());
         })
 
         .def("get_graphnet_bn_all_weight", [](GraphMetNetwork &gmn) {
@@ -147,8 +147,8 @@ PYBIND11_MODULE(graphmetnetwork, m) {
             return py::array_t<float>({32}, gmn.get_graphnet_bn_all_running_var());
         })
 
-        .def("get_graphnet_bn_all_batches_tracked", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({1}, gmn.get_graphnet_bn_all_batches_tracked());
+        .def("get_graphnet_bn_all_num_batches_tracked", [](GraphMetNetwork &gmn) {
+            return py::array_t<int>({1}, gmn.get_graphnet_bn_all_num_batches_tracked());
         })
 
         .def("get_graphnet_conv_continuous_0_0_nn_0_weight", [](GraphMetNetwork &gmn) {
@@ -176,7 +176,7 @@ PYBIND11_MODULE(graphmetnetwork, m) {
         })
 
         .def("get_graphnet_conv_continuous_0_1_num_batches_tracked", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({1}, gmn.get_graphnet_conv_continuous_0_1_num_batches_tracked());
+            return py::array_t<int>({1}, gmn.get_graphnet_conv_continuous_0_1_num_batches_tracked());
         })
 
         .def("get_graphnet_conv_continuous_1_0_nn_0_weight", [](GraphMetNetwork &gmn) {
@@ -204,7 +204,7 @@ PYBIND11_MODULE(graphmetnetwork, m) {
         })
 
         .def("get_graphnet_conv_continuous_1_1_num_batches_tracked", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({1}, gmn.get_graphnet_conv_continuous_1_1_num_batches_tracked());
+            return py::array_t<int>({1}, gmn.get_graphnet_conv_continuous_1_1_num_batches_tracked());
         })
 
         .def("get_graphnet_output_0_weight", [](GraphMetNetwork &gmn) {
