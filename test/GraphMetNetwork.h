@@ -35,6 +35,40 @@ class GraphMetNetwork {
         const float* get_emb1() const { return &emb1[0][0]; }
         const float* get_emb2() const { return &emb2[0][0]; }
 
+        // Getter methods for weights
+        const float* get_graphmet_embed_charge_weight() const { return &graphmet_embed_charge_weight[0][0]; }
+        const float* get_graphmet_embed_pdgid_weight() const { return &graphmet_embed_pdgid_weight[0][0]; }
+        const float* get_graphmet_embed_continuous_0_weight() const { return &graphmet_embed_continuous_0_weight[0][0]; }
+        const float* get_graphmet_embed_continuous_0_bias() const { return &graphmet_embed_continuous_0_bias[0]; }
+        const float* get_graphmet_embed_categorical_0_weight() const { return &graphmet_embed_categorical_0_weight[0][0]; }
+        const float* get_graphmet_embed_categorical_0_bias() const { return &graphmet_embed_categorical_0_bias[0]; }
+        const float* get_graphmet_encode_all_weight() const { return &graphmet_encode_all_weight[0][0]; }
+        const float* get_graphmet_encode_all_bias() const { return &graphmet_encode_all_bias[0]; }
+        const float* get_graphmet_bn_all_weight() const { return &graphmet_bn_all_weight[0]; }
+        const float* get_graphmet_bn_all_bias() const { return &graphmet_bn_all_bias[0]; }
+        const float* get_graphmet_bn_all_running_mean() const { return &graphmet_bn_all_running_mean[0]; }
+        const float* get_graphmet_bn_all_running_var() const { return &graphmet_bn_all_running_var[0]; }
+        const float* get_graphmet_bn_all_batches_tracked() const { return &graphmet_bn_all_batches_tracked[0]; }
+        const float* get_graphmet_conv_continuous_0_0_nn_0_weight() const { return &graphmet_conv_continuous_0_0_nn_0_weight[0][0]; }
+        const float* get_graphmet_conv_continuous_0_0_nn_0_bias() const { return &graphmet_conv_continuous_0_0_nn_0_bias[0]; }
+        const float* get_graphmet_conv_continuous_0_1_weight() const { return &graphmet_conv_continuous_0_1_weight[0]; }
+        const float* get_graphmet_conv_continuous_0_1_bias() const { return &graphmet_conv_continuous_0_1_bias[0]; }
+        const float* get_graphmet_conv_continuous_0_1_running_mean() const { return &graphmet_conv_continuous_0_1_running_mean[0]; }
+        const float* get_graphmet_conv_continuous_0_1_running_var() const { return &graphmet_conv_continuous_0_1_running_var[0]; }
+        const float* get_graphmet_conv_continuous_0_1_num_batches_tracked() const { return &graphmet_conv_continuous_0_1_num_batches_tracked[0]; }
+        const float* get_graphmet_conv_continuous_1_0_nn_0_weight() const { return &graphmet_conv_continuous_1_0_nn_0_weight[0][0]; }
+        const float* get_graphmet_conv_continuous_1_0_nn_0_bias() const { return &graphmet_conv_continuous_1_0_nn_0_bias[0]; }
+        const float* get_graphmet_conv_continuous_1_1_weight() const { return &graphmet_conv_continuous_1_1_weight[0]; }
+        const float* get_graphmet_conv_continuous_1_1_bias() const { return &graphmet_conv_continuous_1_1_bias[0]; }
+        const float* get_graphmet_conv_continuous_1_1_running_mean() const { return &graphmet_conv_continuous_1_1_running_mean[0]; }
+        const float* get_graphmet_conv_continuous_1_1_running_var() const { return &graphmet_conv_continuous_1_1_running_var[0]; }
+        const float* get_graphmet_conv_continuous_1_1_num_batches_tracked() const { return &graphmet_conv_continuous_1_1_num_batches_tracked[0]; }
+        const float* get_graphmet_output_0_weight() const { return &graphmet_output_0_weight[0][0]; }
+        const float* get_graphmet_output_0_bias() const { return &graphmet_output_0_bias[0]; }
+        const float* get_graphmet_output_2_weight() const { return &graphmet_output_2_weight[0][0]; }
+        const float* get_graphmet_output_2_bias() const { return &graphmet_output_2_bias[0]; }
+
+
     private:
 
         /** self.pdgs */
