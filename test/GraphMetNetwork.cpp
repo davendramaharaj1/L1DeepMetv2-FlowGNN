@@ -51,128 +51,128 @@ void GraphMetNetwork::load_weights(std::string weights)
 
     try {
         // Load each weight file with error handling
-        f = safe_fopen(weights + "graphnet_embed_charge.weight.bin");
-        safe_fread(graphmet_embed_charge_weight, sizeof(float), 24, f, weights + "graphnet_embed_charge.weight.bin");
+        f = safe_fopen(weights + "graphnet_embed_charge_weight.bin");
+        safe_fread(graphnet_embed_charge_weight, sizeof(float), 24, f, weights + "graphnet_embed_charge_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_embed_pdgid.weight.bin");
-        safe_fread(graphmet_embed_pdgid_weight, sizeof(float), 56, f, weights + "graphnet_embed_pdgid.weight.bin");
+        f = safe_fopen(weights + "graphnet_embed_pdgid_weight.bin");
+        safe_fread(graphnet_embed_pdgid_weight, sizeof(float), 56, f, weights + "graphnet_embed_pdgid_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_embed_continuous.0.weight.bin");
-        safe_fread(graphmet_embed_continuous_0_weight, sizeof(float), 96, f, weights + "graphnet_embed_continuous.0.weight.bin");
+        f = safe_fopen(weights + "graphnet_embed_continuous_0_weight.bin");
+        safe_fread(graphnet_embed_continuous_0_weight, sizeof(float), 96, f, weights + "graphnet_embed_continuous_0_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_embed_continuous.0.bias.bin");
-        safe_fread(graphmet_embed_continuous_0_bias, sizeof(float), 16, f, weights + "graphnet_embed_continuous.0.bias.bin");
+        f = safe_fopen(weights + "graphnet_embed_continuous_0_bias.bin");
+        safe_fread(graphnet_embed_continuous_0_bias, sizeof(float), 16, f, weights + "graphnet_embed_continuous_0_bias.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_embed_categorical.0.weight.bin");
-        safe_fread(graphmet_embed_categorical_0_weight, sizeof(float), 256, f, weights + "graphnet_embed_categorical.0.weight.bin");
+        f = safe_fopen(weights + "graphnet_embed_categorical_0_weight.bin");
+        safe_fread(graphnet_embed_categorical_0_weight, sizeof(float), 256, f, weights + "graphnet_embed_categorical_0_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_embed_categorical.0.bias.bin");
-        safe_fread(graphmet_embed_categorical_0_bias, sizeof(float), 16, f, weights + "graphnet_embed_categorical.0.bias.bin");
+        f = safe_fopen(weights + "graphnet_embed_categorical_0_bias.bin");
+        safe_fread(graphnet_embed_categorical_0_bias, sizeof(float), 16, f, weights + "graphnet_embed_categorical_0_bias.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_encode_all.0.weight.bin");
-        safe_fread(graphmet_encode_all_weight, sizeof(float), 1024, f, weights + "graphnet_encode_all.0.weight.bin");
+        f = safe_fopen(weights + "graphnet_encode_all_0_weight.bin");
+        safe_fread(graphnet_encode_all_weight, sizeof(float), 1024, f, weights + "graphnet_encode_all_0_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_encode_all.0.bias.bin");
-        safe_fread(graphmet_encode_all_bias, sizeof(float), 32, f, weights + "graphnet_encode_all.0.bias.bin");
+        f = safe_fopen(weights + "graphnet_encode_all_0_bias.bin");
+        safe_fread(graphnet_encode_all_bias, sizeof(float), 32, f, weights + "graphnet_encode_all_0_bias.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_bn_all.weight.bin");
-        safe_fread(graphmet_bn_all_weight, sizeof(float), 32, f, weights + "graphnet_bn_all.weight.bin");
+        f = safe_fopen(weights + "graphnet_bn_all_weight.bin");
+        safe_fread(graphnet_bn_all_weight, sizeof(float), 32, f, weights + "graphnet_bn_all_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_bn_all.bias.bin");
-        safe_fread(graphmet_bn_all_bias, sizeof(float), 32, f, weights + "graphnet_bn_all.bias.bin");
+        f = safe_fopen(weights + "graphnet_bn_all_bias.bin");
+        safe_fread(graphnet_bn_all_bias, sizeof(float), 32, f, weights + "graphnet_bn_all_bias.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_bn_all.running_mean.bin");
-        safe_fread(graphmet_bn_all_running_mean, sizeof(float), 32, f, weights + "graphnet_bn_all.running_mean.bin");
+        f = safe_fopen(weights + "graphnet_bn_all_running_mean.bin");
+        safe_fread(graphnet_bn_all_running_mean, sizeof(float), 32, f, weights + "graphnet_bn_all_running_mean.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_bn_all.running_var.bin");
-        safe_fread(graphmet_bn_all_running_var, sizeof(float), 32, f, weights + "graphnet_bn_all.running_var.bin");
+        f = safe_fopen(weights + "graphnet_bn_all_running_var.bin");
+        safe_fread(graphnet_bn_all_running_var, sizeof(float), 32, f, weights + "graphnet_bn_all_running_var.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_bn_all.num_batches_tracked.bin");
-        safe_fread(graphmet_bn_all_batches_tracked, sizeof(float), 1, f, weights + "graphnet_bn_all.num_batches_tracked.bin");
+        f = safe_fopen(weights + "graphnet_bn_all_num_batches_tracked.bin");
+        safe_fread(graphnet_bn_all_batches_tracked, sizeof(float), 1, f, weights + "graphnet_bn_all_num_batches_tracked.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.0.0.nn.0.weight.bin");
-        safe_fread(graphmet_conv_continuous_0_0_nn_0_weight, sizeof(float), 2048, f, weights + "graphnet_conv_continuous.0.0.nn.0.weight.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_0_0_nn_0_weight.bin");
+        safe_fread(graphnet_conv_continuous_0_0_nn_0_weight, sizeof(float), 2048, f, weights + "graphnet_conv_continuous_0_0_nn_0_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.0.0.nn.0.bias.bin");
-        safe_fread(graphmet_conv_continuous_0_0_nn_0_bias, sizeof(float), 32, f, weights + "graphnet_conv_continuous.0.0.nn.0.bias.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_0_0_nn_0_bias.bin");
+        safe_fread(graphnet_conv_continuous_0_0_nn_0_bias, sizeof(float), 32, f, weights + "graphnet_conv_continuous_0_0_nn_0_bias.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.0.1.weight.bin");
-        safe_fread(graphmet_conv_continuous_0_1_weight, sizeof(float), 32, f, weights + "graphnet_conv_continuous.0.1.weight.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_0_1_weight.bin");
+        safe_fread(graphnet_conv_continuous_0_1_weight, sizeof(float), 32, f, weights + "graphnet_conv_continuous_0_1_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.0.1.bias.bin");
-        safe_fread(graphmet_conv_continuous_0_1_bias, sizeof(float), 32, f, weights + "graphnet_conv_continuous.0.1.bias.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_0_1_bias.bin");
+        safe_fread(graphnet_conv_continuous_0_1_bias, sizeof(float), 32, f, weights + "graphnet_conv_continuous_0_1_bias.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.0.1.running_mean.bin");
-        safe_fread(graphmet_conv_continuous_0_1_running_mean, sizeof(float), 32, f, weights + "graphnet_conv_continuous.0.1.running_mean.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_0_1_running_mean.bin");
+        safe_fread(graphnet_conv_continuous_0_1_running_mean, sizeof(float), 32, f, weights + "graphnet_conv_continuous_0_1_running_mean.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.0.1.running_var.bin");
-        safe_fread(graphmet_conv_continuous_0_1_running_var, sizeof(float), 32, f, weights + "graphnet_conv_continuous.0.1.running_var.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_0_1_running_var.bin");
+        safe_fread(graphnet_conv_continuous_0_1_running_var, sizeof(float), 32, f, weights + "graphnet_conv_continuous_0_1_running_var.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.0.1.num_batches_tracked.bin");
-        safe_fread(graphmet_conv_continuous_0_1_num_batches_tracked, sizeof(float), 1, f, weights + "graphnet_conv_continuous.0.1.num_batches_tracked.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_0_1_num_batches_tracked.bin");
+        safe_fread(graphnet_conv_continuous_0_1_num_batches_tracked, sizeof(float), 1, f, weights + "graphnet_conv_continuous_0_1_num_batches_tracked.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.1.0.nn.0.weight.bin");
-        safe_fread(graphmet_conv_continuous_1_0_nn_0_weight, sizeof(float), 2048, f, weights + "graphnet_conv_continuous.1.0.nn.0.weight.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_1_0_nn_0_weight.bin");
+        safe_fread(graphnet_conv_continuous_1_0_nn_0_weight, sizeof(float), 2048, f, weights + "graphnet_conv_continuous_1_0_nn_0_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.1.0.nn.0.bias.bin");
-        safe_fread(graphmet_conv_continuous_1_0_nn_0_bias, sizeof(float), 32, f, weights + "graphnet_conv_continuous.1.0.nn.0.bias.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_1_0_nn_0_bias.bin");
+        safe_fread(graphnet_conv_continuous_1_0_nn_0_bias, sizeof(float), 32, f, weights + "graphnet_conv_continuous_1_0_nn_0_bias.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.1.1.weight.bin");
-        safe_fread(graphmet_conv_continuous_1_1_weight, sizeof(float), 32, f, weights + "graphnet_conv_continuous.1.1.weight.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_1_1_weight.bin");
+        safe_fread(graphnet_conv_continuous_1_1_weight, sizeof(float), 32, f, weights + "graphnet_conv_continuous_1_1_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.1.1.bias.bin");
-        safe_fread(graphmet_conv_continuous_1_1_bias, sizeof(float), 32, f, weights + "graphnet_conv_continuous.1.1.bias.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_1_1_bias.bin");
+        safe_fread(graphnet_conv_continuous_1_1_bias, sizeof(float), 32, f, weights + "graphnet_conv_continuous_1_1_bias.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.1.1.running_mean.bin");
-        safe_fread(graphmet_conv_continuous_1_1_running_mean, sizeof(float), 32, f, weights + "graphnet_conv_continuous.1.1.running_mean.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_1_1_running_mean.bin");
+        safe_fread(graphnet_conv_continuous_1_1_running_mean, sizeof(float), 32, f, weights + "graphnet_conv_continuous_1_1_running_mean.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.1.1.running_var.bin");
-        safe_fread(graphmet_conv_continuous_1_1_running_var, sizeof(float), 32, f, weights + "graphnet_conv_continuous.1.1.running_var.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_1_1_running_var.bin");
+        safe_fread(graphnet_conv_continuous_1_1_running_var, sizeof(float), 32, f, weights + "graphnet_conv_continuous_1_1_running_var.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_conv_continuous.1.1.num_batches_tracked.bin");
-        safe_fread(graphmet_conv_continuous_1_1_num_batches_tracked, sizeof(float), 1, f, weights + "graphnet_conv_continuous.1.1.num_batches_tracked.bin");
+        f = safe_fopen(weights + "graphnet_conv_continuous_1_1_num_batches_tracked.bin");
+        safe_fread(graphnet_conv_continuous_1_1_num_batches_tracked, sizeof(float), 1, f, weights + "graphnet_conv_continuous_1_1_num_batches_tracked.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_output.0.weight.bin");
-        safe_fread(graphmet_output_0_weight, sizeof(float), 512, f, weights + "graphnet_output.0.weight.bin");
+        f = safe_fopen(weights + "graphnet_output_0_weight.bin");
+        safe_fread(graphnet_output_0_weight, sizeof(float), 512, f, weights + "graphnet_output_0_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_output.0.bias.bin");
-        safe_fread(graphmet_output_0_bias, sizeof(float), 16, f, weights + "graphnet_output.0.bias.bin");
+        f = safe_fopen(weights + "graphnet_output_0_bias.bin");
+        safe_fread(graphnet_output_0_bias, sizeof(float), 16, f, weights + "graphnet_output_0_bias.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_output.2.weight.bin");
-        safe_fread(graphmet_output_2_weight, sizeof(float), 16, f, weights + "graphnet_output.2.weight.bin");
+        f = safe_fopen(weights + "graphnet_output_2_weight.bin");
+        safe_fread(graphnet_output_2_weight, sizeof(float), 16, f, weights + "graphnet_output_2_weight.bin");
         fclose(f);
 
-        f = safe_fopen(weights + "graphnet_output.2.bias.bin");
-        safe_fread(graphmet_output_2_bias, sizeof(float), 1, f, weights + "graphnet_output.2.bias.bin");
+        f = safe_fopen(weights + "graphnet_output_2_bias.bin");
+        safe_fread(graphnet_output_2_bias, sizeof(float), 1, f, weights + "graphnet_output_2_bias.bin");
         fclose(f);
 
     } catch (const std::exception& e) {
@@ -403,7 +403,7 @@ void GraphMetNetwork::forward_output_layer(float emb[MAX_NODES][HIDDEN_DIM],
 
     // Apply ELU activation function
     for (int i = 0; i < this->_num_nodes; ++i) {
-        apply_elu(hidden[i], 1.0); // assuming alpha is 1.0 for ELU
+        apply_elu(hidden[i], 1.0); // assuming alpha is 1_0 for ELU
     }
 
     // Apply the second linear layer to get the final output
@@ -471,11 +471,11 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
         {
             for(int k = 0; k < CONT_DIM; k++)
             {
-                emb_cont[i][j] += x_cont[i][k] * graphmet_embed_continuous_0_weight[j][k];
+                emb_cont[i][j] += x_cont[i][k] * graphnet_embed_continuous_0_weight[j][k];
             }
 
             /** add the bias */
-            emb_cont[i][j] += graphmet_embed_continuous_0_bias[j];
+            emb_cont[i][j] += graphnet_embed_continuous_0_bias[j];
 
             /** apply torch.nn.ELU() to each element */
             emb_cont[i][j] = ELU(emb_cont[i][j], 1.0);
@@ -490,7 +490,7 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
 
         for (int j = 0; j < HIDDEN_DIM/4; j++)
         {
-            emb_chrg[i][j] = graphmet_embed_charge_weight[idx][j];
+            emb_chrg[i][j] = graphnet_embed_charge_weight[idx][j];
         }
     }
 
@@ -525,7 +525,7 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
 
         for (int j = 0; j < HIDDEN_DIM/4; j++)
         {
-            emb_pdg[i][j] = graphmet_embed_pdgid_weight[idx][j];
+            emb_pdg[i][j] = graphnet_embed_pdgid_weight[idx][j];
         }
     }
 
@@ -539,9 +539,9 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
         for (int j = 0; j < HIDDEN_DIM / 2; j++) {
             // emb_cat[i][j] = 0;
             for (int k = 0; k < HIDDEN_DIM / 2; k++) {
-                emb_cat[i][j] += graphmet_embed_categorical_0_weight[j][k] * (emb_chrg[i][k % (HIDDEN_DIM / 4)] + emb_pdg[i][k % (HIDDEN_DIM / 4)]);
+                emb_cat[i][j] += graphnet_embed_categorical_0_weight[j][k] * (emb_chrg[i][k % (HIDDEN_DIM / 4)] + emb_pdg[i][k % (HIDDEN_DIM / 4)]);
             }
-            emb_cat[i][j] += graphmet_embed_categorical_0_bias[j];
+            emb_cat[i][j] += graphnet_embed_categorical_0_bias[j];
 
             emb_cat[i][j] = ELU(emb_cat[i][j], 1.0);
         }
@@ -555,9 +555,9 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
         for (int j = 0; j < HIDDEN_DIM; j++) {
             emb[i][j] = 0;
             for (int k = 0; k < HIDDEN_DIM; k++) {
-                emb[i][j] += graphmet_encode_all_weight[j][k] * (emb_cat[i][k % (HIDDEN_DIM / 2)] + emb_cont[i][k % (HIDDEN_DIM / 2)]);
+                emb[i][j] += graphnet_encode_all_weight[j][k] * (emb_cat[i][k % (HIDDEN_DIM / 2)] + emb_cont[i][k % (HIDDEN_DIM / 2)]);
             }
-            emb[i][j] += graphmet_encode_all_bias[j];
+            emb[i][j] += graphnet_encode_all_bias[j];
             emb[i][j] = ELU(emb[i][j], 1.0);
         }
     }
@@ -568,8 +568,8 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     {
         for (int col = 0; col < HIDDEN_DIM; col++)
         {
-            emb[row][col] = ((encode_all[row][col] - graphmet_bn_all_running_mean[col]) / (graphmet_bn_all_running_var[col] + epsilon))*graphmet_bn_all_weight[col]
-                                + graphmet_bn_all_bias[col];
+            emb[row][col] = ((encode_all[row][col] - graphnet_bn_all_running_mean[col]) / (graphnet_bn_all_running_var[col] + epsilon))*graphnet_bn_all_weight[col]
+                                + graphnet_bn_all_bias[col];
         }
     }
 
@@ -584,12 +584,12 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
                 emb,
                 emb1,
                 edge_index,
-                graphmet_conv_continuous_0_0_nn_0_weight,
-                graphmet_conv_continuous_0_0_nn_0_bias,
-                graphmet_conv_continuous_0_1_weight,
-                graphmet_conv_continuous_0_1_bias,
-                graphmet_conv_continuous_0_1_running_mean,
-                graphmet_conv_continuous_0_1_running_var
+                graphnet_conv_continuous_0_0_nn_0_weight,
+                graphnet_conv_continuous_0_0_nn_0_bias,
+                graphnet_conv_continuous_0_1_weight,
+                graphnet_conv_continuous_0_1_bias,
+                graphnet_conv_continuous_0_1_running_mean,
+                graphnet_conv_continuous_0_1_running_var
                 );
         }
         else
@@ -599,12 +599,12 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
                 emb1,
                 emb2,
                 edge_index,
-                graphmet_conv_continuous_1_0_nn_0_weight,
-                graphmet_conv_continuous_1_0_nn_0_bias,
-                graphmet_conv_continuous_1_1_weight,
-                graphmet_conv_continuous_1_1_bias,
-                graphmet_conv_continuous_1_1_running_mean,
-                graphmet_conv_continuous_1_1_running_var
+                graphnet_conv_continuous_1_0_nn_0_weight,
+                graphnet_conv_continuous_1_0_nn_0_bias,
+                graphnet_conv_continuous_1_1_weight,
+                graphnet_conv_continuous_1_1_bias,
+                graphnet_conv_continuous_1_1_running_mean,
+                graphnet_conv_continuous_1_1_running_var
                 );
         }
     }
@@ -613,7 +613,7 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     // memset(output, 0, MAX_NODES*OUTPUT_DIM*sizeof(float));
 
     // Call the output layer
-    forward_output_layer(emb2, graphmet_output_0_weight, graphmet_output_0_bias, graphmet_output_2_weight, graphmet_output_2_bias, output);
+    forward_output_layer(emb2, graphnet_output_0_weight, graphnet_output_0_bias, graphnet_output_2_weight, graphnet_output_2_bias, output);
 
     // Apply ReLU to the final output
     apply_relu(output, this->_num_nodes);

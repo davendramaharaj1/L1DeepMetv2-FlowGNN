@@ -99,128 +99,128 @@ PYBIND11_MODULE(graphmetnetwork, m) {
         })
 
         // Weight array getters
-        .def("get_graphmet_embed_charge_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({3, 8}, gmn.get_graphmet_embed_charge_weight());
+        .def("get_graphnet_embed_charge_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({3, 8}, gmn.get_graphnet_embed_charge_weight());
         })
 
-        .def("get_graphmet_embed_pdgid_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({7, 8}, gmn.get_graphmet_embed_pdgid_weight());
+        .def("get_graphnet_embed_pdgid_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({7, 8}, gmn.get_graphnet_embed_pdgid_weight());
         })
 
-        .def("get_graphmet_embed_continuous_0_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({16, 6}, gmn.get_graphmet_embed_continuous_0_weight());
+        .def("get_graphnet_embed_continuous_0_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({16, 6}, gmn.get_graphnet_embed_continuous_0_weight());
         })
 
-        .def("get_graphmet_embed_continuous_0_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({16}, gmn.get_graphmet_embed_continuous_0_bias());
+        .def("get_graphnet_embed_continuous_0_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({16}, gmn.get_graphnet_embed_continuous_0_bias());
         })
 
-        .def("get_graphmet_embed_categorical_0_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({16, 16}, gmn.get_graphmet_embed_categorical_0_weight());
+        .def("get_graphnet_embed_categorical_0_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({16, 16}, gmn.get_graphnet_embed_categorical_0_weight());
         })
 
-        .def("get_graphmet_embed_categorical_0_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({16}, gmn.get_graphmet_embed_categorical_0_bias());
+        .def("get_graphnet_embed_categorical_0_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({16}, gmn.get_graphnet_embed_categorical_0_bias());
         })
 
-        .def("get_graphmet_encode_all_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32, 32}, gmn.get_graphmet_encode_all_weight());
+        .def("get_graphnet_encode_all_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32, 32}, gmn.get_graphnet_encode_all_weight());
         })
 
-        .def("get_graphmet_encode_all_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_encode_all_bias());
+        .def("get_graphnet_encode_all_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_encode_all_bias());
         })
 
-        .def("get_graphmet_bn_all_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_bn_all_weight());
+        .def("get_graphnet_bn_all_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_bn_all_weight());
         })
 
-        .def("get_graphmet_bn_all_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_bn_all_bias());
+        .def("get_graphnet_bn_all_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_bn_all_bias());
         })
 
-        .def("get_graphmet_bn_all_running_mean", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_bn_all_running_mean());
+        .def("get_graphnet_bn_all_running_mean", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_bn_all_running_mean());
         })
 
-        .def("get_graphmet_bn_all_running_var", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_bn_all_running_var());
+        .def("get_graphnet_bn_all_running_var", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_bn_all_running_var());
         })
 
-        .def("get_graphmet_bn_all_batches_tracked", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({1}, gmn.get_graphmet_bn_all_batches_tracked());
+        .def("get_graphnet_bn_all_batches_tracked", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({1}, gmn.get_graphnet_bn_all_batches_tracked());
         })
 
-        .def("get_graphmet_conv_continuous_0_0_nn_0_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32, 64}, gmn.get_graphmet_conv_continuous_0_0_nn_0_weight());
+        .def("get_graphnet_conv_continuous_0_0_nn_0_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32, 64}, gmn.get_graphnet_conv_continuous_0_0_nn_0_weight());
         })
 
-        .def("get_graphmet_conv_continuous_0_0_nn_0_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_conv_continuous_0_0_nn_0_bias());
+        .def("get_graphnet_conv_continuous_0_0_nn_0_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_conv_continuous_0_0_nn_0_bias());
         })
 
-        .def("get_graphmet_conv_continuous_0_1_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_conv_continuous_0_1_weight());
+        .def("get_graphnet_conv_continuous_0_1_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_conv_continuous_0_1_weight());
         })
 
-        .def("get_graphmet_conv_continuous_0_1_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_conv_continuous_0_1_bias());
+        .def("get_graphnet_conv_continuous_0_1_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_conv_continuous_0_1_bias());
         })
 
-        .def("get_graphmet_conv_continuous_0_1_running_mean", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_conv_continuous_0_1_running_mean());
+        .def("get_graphnet_conv_continuous_0_1_running_mean", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_conv_continuous_0_1_running_mean());
         })
 
-        .def("get_graphmet_conv_continuous_0_1_running_var", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_conv_continuous_0_1_running_var());
+        .def("get_graphnet_conv_continuous_0_1_running_var", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_conv_continuous_0_1_running_var());
         })
 
-        .def("get_graphmet_conv_continuous_0_1_num_batches_tracked", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({1}, gmn.get_graphmet_conv_continuous_0_1_num_batches_tracked());
+        .def("get_graphnet_conv_continuous_0_1_num_batches_tracked", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({1}, gmn.get_graphnet_conv_continuous_0_1_num_batches_tracked());
         })
 
-        .def("get_graphmet_conv_continuous_1_0_nn_0_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32, 64}, gmn.get_graphmet_conv_continuous_1_0_nn_0_weight());
+        .def("get_graphnet_conv_continuous_1_0_nn_0_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32, 64}, gmn.get_graphnet_conv_continuous_1_0_nn_0_weight());
         })
 
-        .def("get_graphmet_conv_continuous_1_0_nn_0_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_conv_continuous_1_0_nn_0_bias());
+        .def("get_graphnet_conv_continuous_1_0_nn_0_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_conv_continuous_1_0_nn_0_bias());
         })
 
-        .def("get_graphmet_conv_continuous_1_1_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_conv_continuous_1_1_weight());
+        .def("get_graphnet_conv_continuous_1_1_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_conv_continuous_1_1_weight());
         })
 
-        .def("get_graphmet_conv_continuous_1_1_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_conv_continuous_1_1_bias());
+        .def("get_graphnet_conv_continuous_1_1_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_conv_continuous_1_1_bias());
         })
 
-        .def("get_graphmet_conv_continuous_1_1_running_mean", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_conv_continuous_1_1_running_mean());
+        .def("get_graphnet_conv_continuous_1_1_running_mean", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_conv_continuous_1_1_running_mean());
         })
 
-        .def("get_graphmet_conv_continuous_1_1_running_var", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({32}, gmn.get_graphmet_conv_continuous_1_1_running_var());
+        .def("get_graphnet_conv_continuous_1_1_running_var", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({32}, gmn.get_graphnet_conv_continuous_1_1_running_var());
         })
 
-        .def("get_graphmet_conv_continuous_1_1_num_batches_tracked", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({1}, gmn.get_graphmet_conv_continuous_1_1_num_batches_tracked());
+        .def("get_graphnet_conv_continuous_1_1_num_batches_tracked", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({1}, gmn.get_graphnet_conv_continuous_1_1_num_batches_tracked());
         })
 
-        .def("get_graphmet_output_0_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({16, 32}, gmn.get_graphmet_output_0_weight());
+        .def("get_graphnet_output_0_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({16, 32}, gmn.get_graphnet_output_0_weight());
         })
 
-        .def("get_graphmet_output_0_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({16}, gmn.get_graphmet_output_0_bias());
+        .def("get_graphnet_output_0_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({16}, gmn.get_graphnet_output_0_bias());
         })
 
-        .def("get_graphmet_output_2_weight", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({1, 16}, gmn.get_graphmet_output_2_weight());
+        .def("get_graphnet_output_2_weight", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({1, 16}, gmn.get_graphnet_output_2_weight());
         })
 
-        .def("get_graphmet_output_2_bias", [](GraphMetNetwork &gmn) {
-            return py::array_t<float>({1}, gmn.get_graphmet_output_2_bias());
+        .def("get_graphnet_output_2_bias", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({1}, gmn.get_graphnet_output_2_bias());
         });
 
 }
