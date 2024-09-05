@@ -296,7 +296,7 @@ void GraphMetNetwork::batch_normalization(float node_features[MAX_NODES][HIDDEN_
                          float mean[HIDDEN_DIM], 
                          float variance[HIDDEN_DIM]) {
 
-    for (int i = 0; i < MAX_NODES; ++i) {
+    for (int i = 0; i < this->_num_nodes; ++i) {
         for (int j = 0; j < HIDDEN_DIM; ++j) {
             // Subtract mean and divide by the square root of variance
             float normalized = (node_features[i][j] - mean[j]) / sqrt(variance[j] + 1e-5);
@@ -319,8 +319,8 @@ void GraphMetNetwork::edge_convolution(int num_edges,
                       float variance[HIDDEN_DIM]) {
 
     // Temporary array to store the results of edge convolution operation
-    float edge_conv_results[MAX_NODES][HIDDEN_DIM];
-    for (int i = 0; i < MAX_NODES; ++i) {
+    float edge_conv_results[this->_num_nodes][HIDDEN_DIM];
+    for (int i = 0; i < this->_num_nodes; ++i) {
         for (int j = 0; j < HIDDEN_DIM; ++j) {
             edge_conv_results[i][j] = -FLT_MAX;
         }
@@ -355,7 +355,7 @@ void GraphMetNetwork::edge_convolution(int num_edges,
     batch_normalization(edge_conv_results, batch_weight, batch_bias, mean, variance);
 
     // Perform the residual connection
-    for (int i = 0; i < MAX_NODES; ++i) {
+    for (int i = 0; i < this->_num_nodes; ++i) {
         for (int j = 0; j < HIDDEN_DIM; ++j) {
             emb_out[i][j] = emb[i][j] + edge_conv_results[i][j];
         }
@@ -391,10 +391,10 @@ void GraphMetNetwork::forward_output_layer(float emb[MAX_NODES][HIDDEN_DIM],
                           float output[MAX_NODES]) {
 
     // Temporary array to store the intermediate features after first linear layer
-    float hidden[MAX_NODES][HIDDEN_DIM/2];
+    float hidden[this->_num_nodes][HIDDEN_DIM/2];
 
     // Temporary array for output
-    float temp_out[MAX_NODES][OUTPUT_DIM];
+    float temp_out[this->_num_nodes][OUTPUT_DIM];
 
     // Apply the first linear layer
     for (int i = 0; i < this->_num_nodes; ++i) {
@@ -469,16 +469,14 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     {
         for(int j = 0; j < HIDDEN_DIM/2; j++)
         {
+            /** add the bias */
+            emb_cont[i][j] = graphnet_embed_continuous_0_bias[j];
             for(int k = 0; k < CONT_DIM; k++)
             {
                 emb_cont[i][j] += x_cont[i][k] * graphnet_embed_continuous_0_weight[j][k];
             }
-
-            /** add the bias */
-            emb_cont[i][j] += graphnet_embed_continuous_0_bias[j];
-
             /** apply torch.nn.ELU() to each element */
-            emb_cont[i][j] = ELU(emb_cont[i][j], 1.0);
+            emb_cont[i][j] = ELU(emb_cont[i][j], 1.00000);
         }
     }
 
@@ -570,27 +568,56 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
      * Shape: (MAX_NODES, HIDDEN_DIM) * (HIDDEN_DIM, HIDDEN_DIM) = (MAX_NODES, HIDDEN_DIM)
     */
     // memset(emb, 0, MAX_NODES*HIDDEN_DIM*sizeof(float));
-    for (int i = 0; i < this->_num_nodes; i++) {
-        for (int j = 0; j < HIDDEN_DIM; j++) {
-            emb[i][j] = 0;
-            for (int k = 0; k < HIDDEN_DIM; k++) {
-                emb[i][j] += graphnet_encode_all_0_weight[j][k] * (emb_cat[i][k % (HIDDEN_DIM / 2)] + emb_cont[i][k % (HIDDEN_DIM / 2)]);
-            }
-            emb[i][j] += graphnet_encode_all_0_bias[j];
-            emb[i][j] = ELU(emb[i][j], 1.0);
+
+    // Concatenate emb_cat and emb_cont
+    float encode_all_input[num_nodes][HIDDEN_DIM];
+    for (int i = 0; i < num_nodes; ++i) {
+        for (int j = 0; j < HIDDEN_DIM / 2; ++j) {
+            encode_all_input[i][j] = emb_cat[i][j];
+            encode_all_input[i][j + HIDDEN_DIM / 2] = emb_cont[i][j];
         }
     }
 
-    /* emb = self.bn_all(self.encode_all(torch.cat([emb_cat, emb_cont], dim=1))) */
-    // memset(emb, 0, MAX_NODES*HIDDEN_DIM*sizeof(float));
-    for (int row = 0; row < this->_num_nodes; row++)
-    {
-        for (int col = 0; col < HIDDEN_DIM; col++)
-        {
-            emb[row][col] = ((encode_all[row][col] - graphnet_bn_all_running_mean[col]) / (graphnet_bn_all_running_var[col] + epsilon))*graphnet_bn_all_weight[col]
-                                + graphnet_bn_all_bias[col];
+    // Linear transformation: encode_all = encode_all_input * weight^T + bias
+    for (int i = 0; i < num_nodes; ++i) {
+        for (int j = 0; j < HIDDEN_DIM; ++j) {
+            encode_all[i][j] = graphnet_encode_all_0_bias[j]; // Initialize with bias
+            for (int k = 0; k < HIDDEN_DIM; ++k) {
+                encode_all[i][j] += encode_all_input[i][k] * graphnet_encode_all_0_weight[j][k];
+            }
+            encode_all[i][j] = ELU(encode_all[i][j], 1.0);
         }
     }
+
+    // for (int i = 0; i < this->_num_nodes; i++) {
+    //     for (int j = 0; j < HIDDEN_DIM; j++) {
+    //         emb[i][j] = 0;
+    //         for (int k = 0; k < HIDDEN_DIM; k++) {
+    //             emb[i][j] += graphnet_encode_all_0_weight[j][k] * (emb_cat[i][k % (HIDDEN_DIM / 2)] + emb_cont[i][k % (HIDDEN_DIM / 2)]);
+    //         }
+    //         emb[i][j] += graphnet_encode_all_0_bias[j];
+    //         emb[i][j] = ELU(emb[i][j], 1.0);
+    //     }
+    // }
+
+    /* emb = self.bn_all(self.encode_all(torch.cat([emb_cat, emb_cont], dim=1))) */
+    // memset(emb, 0, MAX_NODES*HIDDEN_DIM*sizeof(float));
+    // for (int row = 0; row < this->_num_nodes; row++)
+    // {
+    //     for (int col = 0; col < HIDDEN_DIM; col++)
+    //     {
+    //         emb[row][col] = ((emb[row][col] - graphnet_bn_all_running_mean[col]) / (graphnet_bn_all_running_var[col] + epsilon))*graphnet_bn_all_weight[col] + graphnet_bn_all_bias[col];
+    //     }
+    // }
+
+    // copy over to emb
+    for(int i = 0; i < this->_num_nodes; i++) {
+        for (int j = 0; j < HIDDEN_DIM; j++) {
+            emb[i][j] = encode_all[i][j];
+        }
+    }
+
+    batch_normalization(emb, graphnet_bn_all_weight, graphnet_bn_all_bias, graphnet_bn_all_running_mean, graphnet_bn_all_running_var);
 
     // perform the edge convolutions for CONV_DEPTH times
     // emb = emb + co_conv[1](co_conv[0](emb, edge_index))

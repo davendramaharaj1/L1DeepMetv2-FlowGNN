@@ -31,6 +31,7 @@ class GraphMetNetwork {
         const float* get_emb_chrg() const { return &emb_chrg[0][0]; }
         const float* get_emb_pdg() const { return &emb_pdg[0][0]; }
         const float* get_emb_cat() const { return &emb_cat[0][0]; }
+        const float* get_encode_all() const { return &encode_all[0][0]; }
         const float* get_emb() const { return &emb[0][0]; }
         const float* get_emb1() const { return &emb1[0][0]; }
         const float* get_emb2() const { return &emb2[0][0]; }

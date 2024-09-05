@@ -86,6 +86,10 @@ PYBIND11_MODULE(graphmetnetwork, m) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM/2}, gmn.get_emb_cat());
         })
 
+        .def("get_encode_all", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_encode_all());
+        })
+
         .def("get_emb", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_emb());
         })
