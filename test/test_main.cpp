@@ -102,6 +102,22 @@ PYBIND11_MODULE(graphmetnetwork, m) {
             return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_emb2());
         })
 
+        .def("get_emb_0_0", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_emb_0_0());
+        })
+
+        .def("get_emb_0_1", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_emb_0_1());
+        })
+
+        .def("get_emb_1_0", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_emb_1_0());
+        })
+
+        .def("get_emb_1_1", [](GraphMetNetwork &gmn) {
+            return py::array_t<float>({gmn.get_num_nodes(), HIDDEN_DIM}, gmn.get_emb_1_1());
+        })
+
         // Weight array getters
         .def("get_graphnet_embed_charge_weight", [](GraphMetNetwork &gmn) {
             return py::array_t<float>({3, 8}, gmn.get_graphnet_embed_charge_weight());

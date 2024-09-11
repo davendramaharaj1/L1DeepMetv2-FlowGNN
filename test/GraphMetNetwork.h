@@ -35,6 +35,10 @@ class GraphMetNetwork {
         const float* get_emb() const { return &emb[0][0]; }
         const float* get_emb1() const { return &emb1[0][0]; }
         const float* get_emb2() const { return &emb2[0][0]; }
+        const float* get_emb_0_0() const { return &emb_0_0[0][0]; }
+        const float* get_emb_0_1() const { return &emb_0_1[0][0]; }
+        const float* get_emb_1_0() const { return &emb_1_0[0][0]; }
+        const float* get_emb_1_1() const { return &emb_1_1[0][0]; }
 
         // Getter methods for weights
         const float* get_graphnet_embed_charge_weight() const { return &graphnet_embed_charge_weight[0][0]; }
@@ -126,6 +130,10 @@ class GraphMetNetwork {
         float emb[MAX_NODES][HIDDEN_DIM];
         float emb1[MAX_NODES][HIDDEN_DIM];
         float emb2[MAX_NODES][HIDDEN_DIM];
+        float emb_0_0[MAX_NODES][HIDDEN_DIM];
+        float emb_0_1[MAX_NODES][HIDDEN_DIM];
+        float emb_1_0[MAX_NODES][HIDDEN_DIM];
+        float emb_1_1[MAX_NODES][HIDDEN_DIM];
         float output[MAX_NODES];
 
         // Internal variables
