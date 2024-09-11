@@ -10,6 +10,11 @@
 #include "GraphMetNetwork.h"
 
 GraphMetNetwork::GraphMetNetwork() {
+    reset();
+}
+
+void GraphMetNetwork::reset()
+{
     // Initialize all internal variables
     memset(etaphi, -1, MAX_NODES * 2 * sizeof(float));
     memset(edge_index, -1, MAX_EDGES * 2 * sizeof(int));
@@ -462,8 +467,14 @@ void GraphMetNetwork::forward_output_layer(float emb[MAX_NODES][HIDDEN_DIM],
 // Implementatin of GNN Layers...Equivalent of the Forward Layer
 void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], int x_cat[MAX_NODES][CAT_DIM], int batch[MAX_NODES], int num_nodes)
 {
+
+    // reset the network
+    reset();
+    
     // Set the number of nodes
     this->_num_nodes = num_nodes;
+
+    // Reset other internal variables
 
     // copy x_cont into internal input
     for (int i = 0; i < num_nodes; i++){

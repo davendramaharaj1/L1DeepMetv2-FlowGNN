@@ -141,6 +141,8 @@ class GraphMetNetwork {
         int edge_index[MAX_EDGES][2];
         int num_edges;
 
+        void reset();
+
         /** implementation of torch.nn.ELU() 
          * 
          * @param x (float): value
