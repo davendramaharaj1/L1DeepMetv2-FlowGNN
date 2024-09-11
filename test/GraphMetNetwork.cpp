@@ -415,6 +415,14 @@ void GraphMetNetwork::apply_relu(float arr[], int length) {
     }
 }
 
+void GraphMetNetwork::sigmoid(float array[], uint64_t size)
+{
+    for (uint64_t counter = 0; counter < size; counter++)
+    {
+        array[counter] = 1.0 / (1.0 + std::exp(-array[counter]));
+    }
+}
+
 void GraphMetNetwork::forward_output_layer(float emb[MAX_NODES][HIDDEN_DIM], 
                           float weight1[HIDDEN_DIM/2][HIDDEN_DIM], float bias1[HIDDEN_DIM/2],
                           float weight2[OUTPUT_DIM][HIDDEN_DIM/2], float bias2[OUTPUT_DIM],
@@ -751,7 +759,10 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     forward_output_layer(emb2, graphnet_output_0_weight, graphnet_output_0_bias, graphnet_output_2_weight, graphnet_output_2_bias, output);
 
     // Apply ReLU to the final output
-    apply_relu(output, this->_num_nodes);
+    // apply_relu(output, this->_num_nodes);
+
+    // apply sigmoid
+    sigmoid(output, this->_num_nodes);
 
     return;
 }

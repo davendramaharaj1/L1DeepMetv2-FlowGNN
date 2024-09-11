@@ -198,6 +198,9 @@ class GraphMetNetwork {
         // relu activation
         void apply_relu(float arr[], int length);
 
+        // sigmoid 
+        void sigmoid(float array[], uint64_t size);
+
         // Output layer forward pass function
         void forward_output_layer(float emb[MAX_NODES][HIDDEN_DIM], 
                                 float weight1[HIDDEN_DIM/2][HIDDEN_DIM], float bias1[HIDDEN_DIM/2],
