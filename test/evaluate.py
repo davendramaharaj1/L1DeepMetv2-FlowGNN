@@ -8,6 +8,7 @@ import os.path as osp
 import numpy as np
 import json
 import torch
+import shutil
 from torch.autograd import Variable
 from tqdm import tqdm
 
@@ -15,8 +16,6 @@ import utils
 import model.net as net
 import model.data_loader as data_loader
 from graphmetnetwork import GraphMetNetwork
-
-import matplotlib.pyplot as plt
 
 # %%
 n_features_cont = 6
@@ -202,29 +201,75 @@ def evaluate(model, loss_fn, dataloader, metrics, model_dir, n_features_cont = 6
     
     return metrics_mean, resolution_hists, MET_arr
 
-# %%
-data_dir = '../../L1DeepMETv2/data_ttbar'
-output_dir = "weights_files/"
-dataloaders = data_loader.fetch_dataloader(data_dir = data_dir, batch_size=1, validation_split=.2)
-test_dl = dataloaders['test']
-loss_fn = net.loss_fn
-metrics = net.metrics
-model_dir = 'ckpts'
+def main():
+    data_dir = '../../L1DeepMETv2/data_ttbar'
+    output_dir = "weights_files/"
+    dataloaders = data_loader.fetch_dataloader(data_dir = data_dir, batch_size=1, validation_split=.2)
+    test_dl = dataloaders['test']
+    loss_fn = net.loss_fn
+    metrics = net.metrics
+    model_dir = 'ckpts_relu'
+    
+    prefix = '../../L1DeepMETv2/ckpts_April30_scale_sigmoid'
+    restore_ckpt = osp.join(prefix, 'best.pth.tar')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    norm = torch.tensor([1., 1., 1., 1., 1., 1.]).to(device=device)
+    torch_model = net.Net(continuous_dim=6, categorical_dim=2 , norm=norm).to(device)
+    torch_model.eval()
+    
+    param_restored_new = utils.load_checkpoint(restore_ckpt, torch_model)
+    weights_dict = param_restored_new['state_dict']
+    print(weights_dict)
+    
+    # Check if the directory exists
+    if os.path.exists(output_dir):
+        # Iterate over all the files in the directory
+        for filename in os.listdir(output_dir):
+            file_path = os.path.join(output_dir, filename)
+            try:
+                # Check if it's a file and delete it
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                # If it's a directory, delete the directory and its contents
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print(f"Failed to delete {file_path}. Reason: {e}")
+    else:
+        print(f"Directory {output_dir} does not exist.")
 
-# %%
-# Create an instance of the C++ GraphMetNetwork model
-model = GraphMetNetwork()
 
-# Load the weights
-model.load_weights(output_dir)
+    # Function to save the weights as binary files
+    def save_weights_as_binary(weights_dict, output_dir):
+        for key, tensor in weights_dict.items():
+            # Convert the tensor to a NumPy array
+            np_array = tensor.cpu().numpy()
 
-# %%
-test_metrics = evaluate(model, loss_fn, test_dl, metrics, model_dir)
-metrics_mean = test_metrics[0]  
-resolutions = test_metrics[1]
+            # Create a binary file name based on the tensor name
+            file_name = output_dir + key.replace('.', '_') + '.bin'
 
-# %%
-# Save metrics in a json file in the model directory
-utils.save_dict_to_json(metrics_mean, osp.join(model_dir, 'metrics_val_best.json'))
-utils.save(resolutions, osp.join(model_dir, 'best.resolutions'))
+            # Save the NumPy array as a binary file
+            np_array.tofile(file_name)
+        
+    # Save all weights in the OrderedDict to binary files
+    save_weights_as_binary(weights_dict, output_dir)
 
+    # %%
+    # Create an instance of the C++ GraphMetNetwork model
+    model = GraphMetNetwork()
+
+    # Load the weights
+    model.load_weights(output_dir)
+
+    # %%
+    test_metrics = evaluate(model, loss_fn, test_dl, metrics, model_dir)
+    metrics_mean = test_metrics[0]  
+    resolutions = test_metrics[1]
+
+    # %%
+    # Save metrics in a json file in the model directory
+    utils.save_dict_to_json(metrics_mean, osp.join(model_dir, 'metrics_val_best.json'))
+    utils.save(resolutions, osp.join(model_dir, 'best.resolutions'))
+
+if __name__ == "__main__":
+    main()

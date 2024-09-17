@@ -770,10 +770,10 @@ void GraphMetNetwork::GraphMetNetworkLayers(float x_cont[MAX_NODES][CONT_DIM], i
     forward_output_layer(emb2, graphnet_output_0_weight, graphnet_output_0_bias, graphnet_output_2_weight, graphnet_output_2_bias, output);
 
     // Apply ReLU to the final output
-    // apply_relu(output, this->_num_nodes);
+    apply_relu(output, this->_num_nodes);
 
     // apply sigmoid
-    sigmoid(output, this->_num_nodes);
+    // sigmoid(output, this->_num_nodes);
 
     return;
 }

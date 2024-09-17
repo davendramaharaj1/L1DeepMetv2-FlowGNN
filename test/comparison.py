@@ -1,4 +1,3 @@
-# %%
 import os
 import shutil
 import sys
@@ -22,7 +21,6 @@ import model.net as net
 import model.data_loader as data_loader
 import utils
 
-# %%
 data_dir = '../../L1DeepMETv2/data_ttbar'
 dataloaders = data_loader.fetch_dataloader(data_dir = data_dir, batch_size=1, validation_split=.2)
 test_dl = dataloaders['test']
@@ -30,30 +28,21 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Test dataloader: {}'.format(len(test_dl)))
 print(device)
 
-# %% [markdown]
-# ### Load Torch Model
-
-# %%
+# Load Torch Model
 prefix = '../../L1DeepMETv2/ckpts_April30_scale_sigmoid'
 restore_ckpt = osp.join(prefix, 'last.pth.tar')
 norm = torch.tensor([1., 1., 1., 1., 1., 1.]).to(device=device)
 torch_model = net.Net(continuous_dim=6, categorical_dim=2 , norm=norm).to(device)
 print(torch_model)
 
-# %% [markdown]
-# ### Get the weights
-
-# %%
+# Get the weights
 param_restored_new = utils.load_checkpoint(restore_ckpt, torch_model)
 weights_dict = param_restored_new['state_dict']
 epoch = param_restored_new['epoch']
 torch_model.eval()  # Set the torch model to eval mode
 print(weights_dict)
 
-# %% [markdown]
-# ### Store weights in binaries for C model
-
-# %%
+# Store weights in binaries for C model
 output_dir = "weights_files/"
 
 # Check if the directory exists
@@ -89,20 +78,13 @@ def save_weights_as_binary(weights_dict, output_dir):
 # Save all weights in the OrderedDict to binary files
 save_weights_as_binary(weights_dict, output_dir)
 
-# %% [markdown]
-# ### Load C++ Model
-
-# %%
 # Create an instance of the C++ GraphMetNetwork model
 cmodel = GraphMetNetwork()
 
 # Load the weights
 cmodel.load_weights(output_dir)
 
-# %% [markdown]
-# ### Verify weights are the same between torch model and C model
-
-# %%
+# Verify weights are the same between torch model and C model
 num_weights = 0
 for key, tensor in weights_dict.items():
     # Convert the tensor to a NumPy array
@@ -119,10 +101,7 @@ for key, tensor in weights_dict.items():
 
 print(f'Number of weights checked: {num_weights}')
 
-# %% [markdown]
-# ### Run Inference and compare outputs
-
-# %%
+# Run Inference and compare outputs
 import json
 
 # List to track errors
@@ -172,7 +151,7 @@ for data in tqdm(test_dl, desc="Testing Progress", leave=False):
     counter += 1
 
 # Save failed cases to a JSON file
-with open("failed_cases.json", "w") as f:
+with open("failed_cases_relu.json", "w") as f:
     json.dump(failed_cases, f, indent=4)
 
 print(f"Total failed cases: {len(failed_cases)}")
